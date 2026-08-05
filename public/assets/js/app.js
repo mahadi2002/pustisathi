@@ -1,7 +1,20 @@
 'use strict';
 
-/* BMI/BMR calculator — client-side only, nothing sent to the server
-   (01-BUILD-SPEC.md section 3: "BMI/BMR calculator (no save)"). */
+/* Mobile nav toggle — plain show/hide, no framework needed for one menu. */
+(function () {
+  var toggle = document.getElementById('nav-toggle');
+  var menu = document.getElementById('nav-links-mobile');
+  if (!toggle || !menu) {
+    return;
+  }
+
+  toggle.addEventListener('click', function () {
+    var isOpen = menu.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  });
+})();
+
+/* BMI/BMR calculator — client-side only, nothing sent to the server. */
 (function () {
   var form = document.getElementById('bmi-form');
   if (!form) {
