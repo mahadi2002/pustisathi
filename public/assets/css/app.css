@@ -216,6 +216,24 @@ input[type=number], select, textarea {
 
 .hp-trap { position: absolute; left: -9999px; top: -9999px; width: 1px; height: 1px; overflow: hidden; }
 
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+.text-muted { color: var(--color-muted); }
+.section-note { font-size: .85rem; margin: -8px 0 20px; }
+
+.food-search-form { display: flex; gap: 10px; }
+.food-search-form input { flex: 1; }
+.food-search-form .btn { flex-shrink: 0; }
+
+.checkbox-row { display: flex; align-items: center; gap: 8px; font-weight: 400; margin-bottom: 8px; }
+.checkbox-row input { width: auto; }
+
+.dashboard-summary { display: flex; flex-wrap: wrap; gap: 24px; align-items: center; justify-content: center; text-align: center; }
+.macro-legend p { margin: 0 0 4px; }
+
+.meal-card h3 { color: var(--color-primary-dark); }
+.meal-items { margin: 0; padding-left: 20px; }
+.meal-items li { margin-bottom: 4px; }
+
 /* -- Landing page ------------------------------------------------------- */
 
 .hero {

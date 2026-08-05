@@ -18,6 +18,7 @@ return [
     // -- Public (free) --------------------------------------------------
     ['GET',  '/',             'HomeController@index',       []],
     ['GET',  '/calculator',   'HomeController@calculator',  []],
+    ['GET',  '/foods',        'FoodController@search',      []],
     ['GET',  '/health',       'HealthController@index',     []],
 
     // -- Subscribe / login (mobile+OTP, every role) -----------------------
@@ -34,4 +35,11 @@ return [
 
     // -- Nutritionist (approval + billing gated by RequireNutritionist) ---
     ['GET',  '/nutri', 'NutriController@home', ['nutri']],
+
+    // -- Gated patient app --------------------------------------------------
+    ['GET',  '/app/onboarding',      'OnboardingController@form',     ['auth', 'sub']],
+    ['POST', '/app/onboarding',      'OnboardingController@store',    ['auth', 'sub', 'csrf']],
+    ['GET',  '/app/dashboard',       'DashboardController@index',     ['auth', 'sub']],
+    ['GET',  '/app/plan',            'PlanController@show',           ['auth', 'sub']],
+    ['POST', '/app/plan/regenerate', 'PlanController@regenerate',     ['auth', 'sub', 'csrf']],
 ];
