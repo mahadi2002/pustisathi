@@ -7,9 +7,8 @@ declare(strict_types=1);
  */
 return [
     'prefixes' => [
-        '016' => 'robi',
-        '019' => 'robi',
-        '017' => 'airtel',
+        '018' => 'robi',
+        '016' => 'airtel',
     ],
     'display_note' => 'Robi & Airtel Bangladesh',
 ];

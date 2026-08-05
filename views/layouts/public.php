@@ -10,7 +10,7 @@
 <header class="site-header">
   <div class="container">
     <a class="brand" href="/">পুষ্টিসাথী</a>
-    <a class="price-pill" href="/subscribe">মাত্র ৳<?= e($dailyAmount) ?>/day</a>
+    <a class="price-pill" href="/subscribe" title="দৈনিক ৳<?= e($dailyAmount) ?>, VAT/SD/SC-সহ">মাত্র ৳<?= e($dailyAmount) ?>/day (VAT-সহ)</a>
     <nav class="nav-links">
       <a href="/calculator">BMI Calculator</a>
       <a href="/subscribe">Subscribe</a>

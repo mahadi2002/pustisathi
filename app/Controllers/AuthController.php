@@ -23,7 +23,7 @@ final class AuthController extends Controller
     public function login(Request $request): Response
     {
         if (!$request->isPost()) {
-            return $this->view('public/login', ['next' => $request->str('next', '/')]);
+            return $this->view('public/login', ['next' => $request->str('next', '')]);
         }
 
         if ($request->str('mobile') !== '') {
@@ -61,7 +61,7 @@ final class AuthController extends Controller
 
         return $this->redirect(match ($user['role']) {
             'admin'        => '/admin',
-            'nutritionist' => '/nutri/patients',
+            'nutritionist' => '/nutri',
             default        => '/',
         });
     }
@@ -98,7 +98,7 @@ final class AuthController extends Controller
         Session::login($userId);
         Session::notify('info', 'আপনার Application জমা হয়েছে — Admin অনুমোদনের অপেক্ষায় আছে।');
 
-        return $this->redirect('/nutri/patients');
+        return $this->redirect('/nutri');
     }
 
     public function logout(Request $request): Response

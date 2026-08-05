@@ -28,4 +28,10 @@ return [
     ['GET',  '/auth/register-nutritionist',    'AuthController@registerNutritionist', ['guest']],
     ['POST', '/auth/register-nutritionist',    'AuthController@registerNutritionist', ['guest', 'csrf', 'hp']],
     ['POST', '/auth/logout',                   'AuthController@logout',               ['auth', 'csrf']],
+
+    // -- Nutritionist (approval + billing gated by RequireNutritionist) ------
+    ['GET',  '/nutri/subscribe',        'NutriSubscribeController@form',       ['auth']],
+    ['POST', '/nutri/subscribe/otp',    'NutriSubscribeController@requestOtp', ['auth', 'csrf', 'rl:otp_request']],
+    ['POST', '/nutri/subscribe/verify', 'NutriSubscribeController@verifyOtp',  ['auth', 'csrf', 'rl:otp_verify']],
+    ['GET',  '/nutri',                  'NutriController@home',                ['nutri']],
 ];

@@ -3,70 +3,38 @@ declare(strict_types=1);
 
 namespace App\Gateways;
 
-use App\Core\Crypto;
 use App\Core\Db;
-use App\Core\Logger;
-use App\Core\RateLimit;
+use App\Exceptions\OtpException;
 use App\Repositories\UserRepo;
+use App\Services\OtpService;
 use App\Services\SubscriptionService;
 
 /**
- * Active dev implementation. Generates a real OTP, logs it (never SMS'd) to
- * storage/logs/otp-*.log, and lets requestOtp/verifyOtp exercise the same
- * shape a real carrier-billing gateway would — bootstrap.php refuses to run
- * this class at all when APP_ENV=production, so it only ever runs locally.
+ * Active dev implementation. OTP mechanics live in OtpService (shared with
+ * the nutritionist billing-link flow); this class owns what happens once an
+ * OTP is confirmed — turning a mobile number into a patient account with an
+ * active subscription. bootstrap.php refuses to run this class at all when
+ * APP_ENV=production, so it only ever runs locally.
  */
 final class MockGateway implements SubscriptionGateway
 {
     public function requestOtp(string $mobile): OtpRequestResult
     {
-        $perNumberLimit = (int) config('app.otp.rate_per_hour', 3);
-        $retry = RateLimit::hit('otp_request_mobile', 'mobile:' . Crypto::blindIndex($mobile), $perNumberLimit, 3600);
-        if ($retry !== null) {
-            return new OtpRequestResult(false, $retry, 'অনেকবার চেষ্টা হয়েছে। ' . RateLimit::humanWait($retry) . ' পর আবার চেষ্টা করুন।');
+        try {
+            OtpService::request($mobile);
+            return new OtpRequestResult(true);
+        } catch (OtpException $e) {
+            return new OtpRequestResult(false, message: $e->getMessage());
         }
-
-        $length = (int) config('app.otp.length', 6);
-        $otp    = str_pad((string) random_int(0, (10 ** $length) - 1), $length, '0', STR_PAD_LEFT);
-        $ttl    = (int) config('app.otp.ttl', 300);
-
-        Db::insert(
-            'INSERT INTO otp_requests (mobile, otp_hash, expires_at) VALUES (?, ?, DATE_ADD(NOW(), INTERVAL ? SECOND))',
-            [$mobile, password_hash($otp, PASSWORD_DEFAULT), $ttl]
-        );
-
-        // Dev-only channel — a real gateway would never have the plaintext code to log.
-        Logger::channel('otp', "mobile_last4=" . substr($mobile, -4) . " otp={$otp} ttl={$ttl}s");
-
-        return new OtpRequestResult(true);
     }
 
     public function verifyOtp(string $mobile, string $otp): SubscriptionResult
     {
-        $maxAttempts = (int) config('app.otp.max_attempts', 5);
-
-        $row = Db::first(
-            'SELECT id, otp_hash, attempt_count FROM otp_requests
-             WHERE mobile = ? AND consumed_at IS NULL AND expires_at > NOW()
-             ORDER BY id DESC LIMIT 1',
-            [$mobile]
-        );
-
-        if ($row === null) {
-            return new SubscriptionResult(false, message: 'কোড-এর মেয়াদ শেষ হয়ে গেছে। আবার চেষ্টা করুন।');
+        try {
+            OtpService::verify($mobile, $otp);
+        } catch (OtpException $e) {
+            return new SubscriptionResult(false, message: $e->getMessage());
         }
-
-        if ((int) $row['attempt_count'] >= $maxAttempts) {
-            return new SubscriptionResult(false, message: 'অনেকবার ভুল চেষ্টা হয়েছে। নতুন কোড চান।');
-        }
-
-        if (!password_verify($otp, (string) $row['otp_hash'])) {
-            Db::exec('UPDATE otp_requests SET attempt_count = attempt_count + 1 WHERE id = ?', [$row['id']]);
-            $left = $maxAttempts - ((int) $row['attempt_count'] + 1);
-            return new SubscriptionResult(false, message: 'ভুল কোড। আরও ' . bn_num(max(0, $left)) . ' বার চেষ্টা করতে পারবেন।');
-        }
-
-        Db::exec('UPDATE otp_requests SET consumed_at = NOW() WHERE id = ?', [$row['id']]);
 
         $operator = self::detectOperator($mobile);
         [$userId, $isNew] = (new UserRepo())->findOrCreatePatient($mobile, $operator);
@@ -113,7 +81,7 @@ final class MockGateway implements SubscriptionGateway
         return new WebhookResult(true, $eventType);
     }
 
-    private static function detectOperator(string $mobile): string
+    public static function detectOperator(string $mobile): string
     {
         $prefix = substr($mobile, 0, 3);
         return (string) (config('operators.prefixes')[$prefix] ?? 'unknown');

@@ -22,7 +22,7 @@ final class GuestOnly implements Middleware
 
         return Response::redirect(match ($role) {
             'admin'        => '/admin',
-            'nutritionist' => '/nutri/patients',
+            'nutritionist' => '/nutri',
             'patient'      => '/app/dashboard',
             default        => '/',
         });

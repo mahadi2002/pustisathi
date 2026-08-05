@@ -2,7 +2,7 @@
 
 <section class="card">
   <h1>Nutritionist হিসেবে Register করুন</h1>
-  <p>Submit করার পর আপনার Application Admin অনুমোদনের অপেক্ষায় থাকবে — এটি Self-service নয়।</p>
+  <p>Submit করার পর আপনার Application Admin অনুমোদনের অপেক্ষায় থাকবে — এটি Self-service নয়। Approve হওয়ার পর, Patient দের Profile ও Plan দেখতে আপনাকেও একজন সাধারণ Subscriber-এর মতোই ৳<?= e($dailyAmount) ?>/day (VAT/SD/SC-সহ) Subscription চালু করতে হবে।</p>
 
   <form method="post" action="/auth/register-nutritionist" class="field">
     <?= csrf_field() ?>

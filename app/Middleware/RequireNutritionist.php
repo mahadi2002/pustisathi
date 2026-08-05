@@ -9,11 +9,14 @@ use App\Core\Response;
 use App\Core\Session;
 use App\Core\View;
 use App\Exceptions\HttpException;
+use App\Services\SubscriptionService;
 
 /**
- * role='nutritionist' AND nutritionist_status='approved' — approval is a
- * separate admin-driven gate on top of the subscription/auth gate. Never
- * self-service: registering only gets you to 'pending'.
+ * role='nutritionist' AND nutritionist_status='approved' AND an active
+ * subscription — approval and billing are separate gates. Approval is
+ * never self-service (registering only gets you to 'pending'); billing
+ * works exactly like a patient's, same OTP flow, same price, just linked
+ * to an account that already exists instead of creating a new one.
  */
 final class RequireNutritionist implements Middleware
 {
@@ -35,6 +38,10 @@ final class RequireNutritionist implements Middleware
 
         if ($user['nutritionist_status'] !== 'approved') {
             return Response::html(View::render('nutri/pending', ['status' => $user['nutritionist_status']]));
+        }
+
+        if (!SubscriptionService::hasAccess($userId)) {
+            return Response::redirect('/nutri/subscribe');
         }
 
         View::share('currentNutritionistId', (int) $user['id']);

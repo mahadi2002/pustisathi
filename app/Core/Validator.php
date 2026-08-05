@@ -81,8 +81,8 @@ final class Validator
         $str   = is_scalar($value) ? (string) $value : '';
 
         return match ($rule) {
-            // 016/019 = Robi, 017 = Airtel — re-verify these before launch, BTRC prefixes have shifted before after operator mergers.
-            'mobile' => preg_match('/^01[6789][0-9]{8}$/', $str) === 1
+            // 018 = Robi, 016 = Airtel — re-verify these before launch, BTRC prefixes have shifted before after operator mergers.
+            'mobile' => preg_match('/^01[68][0-9]{8}$/', $str) === 1
                 ?: $this->fail($field, '১১ সংখ্যার সঠিক Robi/Airtel নম্বর দিন (01XXXXXXXXX)।'),
 
             'digits' => preg_match('/^[0-9]{' . (int) $arg . '}$/', $str) === 1
