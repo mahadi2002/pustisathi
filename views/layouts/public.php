@@ -13,8 +13,14 @@
     <a class="price-pill" href="/subscribe" title="দৈনিক ৳<?= e($dailyAmount) ?>, VAT/SD/SC-সহ">মাত্র ৳<?= e($dailyAmount) ?>/day (VAT-সহ)</a>
     <nav class="nav-links">
       <a href="/calculator">BMI Calculator</a>
-      <a href="/subscribe">Subscribe</a>
-      <a href="/auth/login">Login</a>
+      <?php if (\App\Core\Session::userId() === null): ?>
+        <a href="/subscribe">Subscribe / Login</a>
+      <?php else: ?>
+        <form method="post" action="/auth/logout" class="nav-logout-form">
+          <?= csrf_field() ?>
+          <button type="submit" class="link-button">Logout</button>
+        </form>
+      <?php endif; ?>
     </nav>
   </div>
 </header>

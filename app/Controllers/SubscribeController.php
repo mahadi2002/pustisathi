@@ -10,11 +10,14 @@ use App\Core\Response;
 use App\Core\Session;
 use App\Core\Validator;
 use App\Gateways\GatewayFactory;
+use App\Repositories\UserRepo;
 
 /**
  * One URL (`GET /subscribe`) covers both steps of the OTP funnel — which
  * step renders is decided by whether a pending mobile number is sitting in
- * the session, not by the URL.
+ * the session, not by the URL. It also doubles as the login screen for
+ * every role: a returning nutritionist or admin's number is found, not
+ * recreated, and gets routed on by whatever role is already on file.
  */
 final class SubscribeController extends Controller
 {
@@ -82,6 +85,20 @@ final class SubscribeController extends Controller
         Session::forget('otp_pending_mobile');
         Session::forget('otp_requested_at');
         Session::login($result->userId);
+
+        $user = (new UserRepo())->find($result->userId);
+        $role = $user['role'] ?? 'patient';
+
+        if ($role === 'admin') {
+            Session::notify('success', 'স্বাগতম!');
+            return $this->redirect('/admin');
+        }
+
+        if ($role === 'nutritionist') {
+            Session::notify('success', 'স্বাগতম!');
+            return $this->redirect('/nutri');
+        }
+
         Session::notify('success', 'স্বাগতম! আপনার Subscription সক্রিয় হয়েছে।');
 
         $hasProfile = (bool) Db::value('SELECT 1 FROM body_profiles WHERE user_id = ?', [$result->userId]);

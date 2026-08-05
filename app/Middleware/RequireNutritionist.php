@@ -24,7 +24,7 @@ final class RequireNutritionist implements Middleware
     {
         $userId = Session::userId();
         if ($userId === null) {
-            return Response::redirect('/auth/login?next=' . rawurlencode($request->path));
+            return Response::redirect('/subscribe?next=' . rawurlencode($request->path));
         }
 
         $user = Db::first(
@@ -41,7 +41,8 @@ final class RequireNutritionist implements Middleware
         }
 
         if (!SubscriptionService::hasAccess($userId)) {
-            return Response::redirect('/nutri/subscribe');
+            Session::notify('info', 'আপনার Subscription সক্রিয় নেই — একই Mobile Number দিয়ে আবার OTP verify করে সক্রিয় করুন।');
+            return Response::redirect('/subscribe');
         }
 
         View::share('currentNutritionistId', (int) $user['id']);

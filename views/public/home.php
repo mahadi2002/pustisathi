@@ -109,7 +109,7 @@
 <section class="card">
   <h2>একজন Nutritionist?</h2>
   <p>Approved হওয়ার পর Patient দের Profile দেখে নিজে Plan বানাতে ও সংশোধন করতে পারবেন।</p>
-  <a class="btn btn-outline" href="/auth/register-nutritionist">Nutritionist হিসেবে Register করুন</a>
+  <a class="btn btn-outline" href="/nutri/register">Nutritionist হিসেবে Register করুন</a>
 </section>
 
 <?= \App\Core\View::partial('partials/subscribe-box', ['next' => '/app/dashboard']) ?>

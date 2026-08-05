@@ -17,7 +17,7 @@ final class RequireAuth implements Middleware
 
         if ($userId === null) {
             Session::notify('info', 'এই অংশ দেখতে আগে Login করুন।');
-            return Response::redirect('/auth/login?next=' . rawurlencode($request->path));
+            return Response::redirect('/subscribe?next=' . rawurlencode($request->path));
         }
 
         // The account may have been soft-deleted since the session was created.
@@ -25,7 +25,7 @@ final class RequireAuth implements Middleware
         if ($user === null) {
             Session::revokeAllForUser($userId);
             Session::destroy_all();
-            return Response::redirect('/auth/login');
+            return Response::redirect('/subscribe');
         }
 
         return $next();

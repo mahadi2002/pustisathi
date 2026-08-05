@@ -3,7 +3,10 @@ declare(strict_types=1);
 
 /**
  * Local-only test accounts for logging in without going through the full
- * signup flow every time. Run via `php database/migrate.php --seed`.
+ * signup flow every time. Every role signs in the same way here — mobile +
+ * OTP, dev code 123456 — so these differ from a real account only in
+ * already having a role/status/subscription set up in advance.
+ * Run via `php database/migrate.php --seed`.
  */
 
 use App\Core\Crypto;
@@ -14,29 +17,24 @@ if (config('app.env') === 'production') {
     return;
 }
 
-const DEMO_PASSWORD = 'ChangeMe123!';
-
-$adminEmail = 'admin@pustisathi.test';
-if (Db::value('SELECT 1 FROM users WHERE email = ?', [$adminEmail]) === null) {
+$adminMobile = '01899999999';
+if (Db::value('SELECT 1 FROM users WHERE mobile_hash = ?', [Crypto::blindIndex('mobile:' . $adminMobile)]) === null) {
     Db::insert(
-        'INSERT INTO users (role, email, password_hash) VALUES (?, ?, ?)',
-        ['admin', $adminEmail, password_hash(DEMO_PASSWORD, PASSWORD_BCRYPT, ['cost' => 12])]
+        'INSERT INTO users (role, mobile, mobile_hash, operator) VALUES (?, ?, ?, ?)',
+        ['admin', Crypto::encrypt($adminMobile), Crypto::blindIndex('mobile:' . $adminMobile), 'robi']
     );
-    out('   admin: admin@pustisathi.test / ' . DEMO_PASSWORD);
+    out("   admin: {$adminMobile}, OTP code 123456 — no subscription needed");
 }
 
-$nutriEmail  = 'nutritionist@pustisathi.test';
 $nutriMobile = '01812345678';
-$nutriId     = Db::value('SELECT id FROM users WHERE email = ?', [$nutriEmail]);
+$nutriId     = Db::value('SELECT id FROM users WHERE mobile_hash = ?', [Crypto::blindIndex('mobile:' . $nutriMobile)]);
 
 if ($nutriId === null) {
     $nutriId = Db::insert(
-        'INSERT INTO users (role, email, password_hash, mobile, mobile_hash, operator, nutritionist_status, nutritionist_creds)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+        'INSERT INTO users (role, mobile, mobile_hash, operator, nutritionist_status, nutritionist_creds)
+         VALUES (?, ?, ?, ?, ?, ?)',
         [
             'nutritionist',
-            $nutriEmail,
-            password_hash(DEMO_PASSWORD, PASSWORD_BCRYPT, ['cost' => 12]),
             Crypto::encrypt($nutriMobile),
             Crypto::blindIndex('mobile:' . $nutriMobile),
             'robi',
@@ -49,5 +47,5 @@ if ($nutriId === null) {
          VALUES (?, 'active', 'robi', 'mock', NOW(), DATE_ADD(NOW(), INTERVAL 1 DAY))",
         [$nutriId]
     );
-    out('   nutritionist (pre-approved + pre-subscribed): nutritionist@pustisathi.test / ' . DEMO_PASSWORD);
+    out("   nutritionist (pre-approved + pre-subscribed): {$nutriMobile}, OTP code 123456");
 }

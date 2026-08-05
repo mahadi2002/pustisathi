@@ -21,11 +21,11 @@ final class RequireAdmin implements Middleware
 
         $userId = Session::userId();
         if ($userId === null) {
-            return Response::redirect('/auth/login?next=' . rawurlencode($request->path));
+            return Response::redirect('/subscribe?next=' . rawurlencode($request->path));
         }
 
         $admin = Db::first(
-            'SELECT id, email, role FROM users WHERE id = ? AND deleted_at IS NULL',
+            'SELECT id, role FROM users WHERE id = ? AND deleted_at IS NULL',
             [$userId]
         );
 

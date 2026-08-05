@@ -10,11 +10,13 @@ use App\Services\OtpService;
 use App\Services\SubscriptionService;
 
 /**
- * Active dev implementation. OTP mechanics live in OtpService (shared with
- * the nutritionist billing-link flow); this class owns what happens once an
- * OTP is confirmed — turning a mobile number into a patient account with an
- * active subscription. bootstrap.php refuses to run this class at all when
- * APP_ENV=production, so it only ever runs locally.
+ * Active dev implementation. OTP mechanics live in OtpService, shared with
+ * nutritionist registration; this class owns what happens once an OTP is
+ * confirmed for the plain subscribe screen — a brand-new number becomes a
+ * patient account, an existing number keeps its real role. Everyone except
+ * admin gets an active subscription out of this; admin runs the platform
+ * rather than pays for it. bootstrap.php refuses to run this class at all
+ * when APP_ENV=production, so it only ever runs locally.
  */
 final class MockGateway implements SubscriptionGateway
 {
@@ -38,7 +40,9 @@ final class MockGateway implements SubscriptionGateway
 
         $operator = self::detectOperator($mobile);
         [$userId, $isNew] = (new UserRepo())->findOrCreatePatient($mobile, $operator);
-        $subscriptionId = SubscriptionService::activate($userId, $operator, 'mock');
+
+        $role           = (string) Db::value('SELECT role FROM users WHERE id = ?', [$userId]);
+        $subscriptionId = $role === 'admin' ? null : SubscriptionService::activate($userId, $operator, 'mock');
 
         return new SubscriptionResult(true, $userId, $subscriptionId, $isNew);
     }
