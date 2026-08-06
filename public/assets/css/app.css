@@ -169,6 +169,29 @@ a:hover { color: var(--color-primary-dark); }
 
 .price-pill:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); color: var(--on-accent); }
 
+/* -- Mobile nav toggle --------------------------------------------------- */
+
+/* Defined before the @media block below, not after — a later unconditional
+   rule at equal specificity would win the cascade over the media query's
+   "hide at desktop width" regardless of viewport, which is exactly the bug
+   that left this button visible (and redundant) on desktop. */
+.nav-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  cursor: pointer;
+  transition: background var(--transition), transform var(--transition);
+}
+
+.nav-toggle:hover { background: var(--color-primary-light); transform: translateY(-1px); }
+
+.nav-toggle svg { width: 20px; height: 20px; }
+
 .nav-links { display: none; gap: 24px; align-items: center; }
 
 @media (min-width: 900px) {
@@ -220,25 +243,6 @@ a:hover { color: var(--color-primary-dark); }
   cursor: pointer;
   text-decoration: underline;
 }
-
-/* -- Mobile nav toggle --------------------------------------------------- */
-
-.nav-toggle {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  background: var(--color-surface);
-  cursor: pointer;
-  transition: background var(--transition), transform var(--transition);
-}
-
-.nav-toggle:hover { background: var(--color-primary-light); transform: translateY(-1px); }
-
-.nav-toggle svg { width: 20px; height: 20px; }
 
 .nav-links-mobile {
   display: none;
