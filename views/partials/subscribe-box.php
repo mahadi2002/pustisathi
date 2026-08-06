@@ -11,7 +11,7 @@
     <small class="hint">শুধু Robi (018) ও Airtel (016) Number</small>
     <?php if ($err = error_for('mobile')): ?><span class="error"><?= e($err) ?></span><?php endif; ?>
 
-    <p>⚡ Daily মাত্র ৳<?= e($dailyAmount) ?> (VAT/SD/SC-সহ) — যেকোনো সময় Unsubscribe করুন</p>
-    <button type="submit" class="btn btn-block">OTP পাঠান →</button>
+    <p>⚡ Daily ৳<?= e($dailyAmount) ?> (Incl. VAT, SD &amp; SC) — যেকোনো সময় Unsubscribe করুন</p>
+    <button type="submit" class="btn btn-accent btn-block">Subscribe Now</button>
   </form>
 </section>

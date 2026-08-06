@@ -3,7 +3,9 @@
 <section class="hero">
   <h1>আপনার শরীর, বাজেট আর এলাকা বুঝে প্রতিদিনের ডায়েট প্ল্যান</h1>
   <p>বয়স, ওজন, বাজেট আর আপনার এলাকায় যা পাওয়া যায় — সব মিলিয়ে পুষ্টিসাথী বানিয়ে দেয় বাস্তবসম্মত খাবারের তালিকা। ডায়াবেটিস, কিডনি সমস্যা, হৃদরোগ বা গর্ভাবস্থার মতো অবস্থার জন্য আলাদা নির্দেশনাও আছে।</p>
-  <a class="btn btn-accent" href="/subscribe">🚀 এখনই Start করুন — <span class="price-tag">৳<?= e($dailyAmount) ?>/day</span> (VAT/SD/SC-সহ)</a>
+  <p class="hero-kicker">🚀 এখনই Start করুন</p>
+  <?= \App\Core\View::partial('partials/price-line') ?>
+  <?= \App\Core\View::partial('partials/subscribe-now-button') ?>
 </section>
 
 <h2 class="section-title">কীভাবে কাজ করে</h2>
@@ -84,7 +86,7 @@
 <div class="compare-table-wrap">
   <table class="compare-table">
     <thead>
-      <tr><th>Feature</th><th>Free</th><th>Subscriber (৳<?= e($dailyAmount) ?>/day)</th></tr>
+      <tr><th>Feature</th><th>Free</th><th>Subscriber</th></tr>
     </thead>
     <tbody>
       <tr><td>BMI / BMR ক্যালকুলেটর</td><td class="yes">✓</td><td class="yes">✓</td></tr>
@@ -97,6 +99,7 @@
     </tbody>
   </table>
 </div>
+<?= \App\Core\View::partial('partials/price-line') ?>
 
 <div class="trust-row">
   <div class="trust-item reveal">
@@ -118,7 +121,7 @@
 
 <section class="card">
   <h2>একজন Nutritionist?</h2>
-  <p>Register করুন, Admin Approve করলে এবং Subscription চালু থাকলে (ঠিক রোগীদের মতোই ৳<?= e($dailyAmount) ?>/day) ভবিষ্যতে Patient দের Profile দেখে নিজে Plan বানাতে ও সংশোধন করতে পারবেন।</p>
+  <p>Register করুন, Admin Approve করলে এবং Subscription চালু থাকলে (ঠিক রোগীদের মতোই — Daily ৳<?= e($dailyAmount) ?>, Incl. VAT, SD &amp; SC) ভবিষ্যতে Patient দের Profile দেখে নিজে Plan বানাতে ও সংশোধন করতে পারবেন।</p>
   <a class="btn btn-outline" href="/nutri/register">Nutritionist হিসেবে Register করুন</a>
 </section>
 

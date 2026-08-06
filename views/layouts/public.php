@@ -16,7 +16,10 @@
       </svg>
       পুষ্টিসাথী
     </a>
-    <a class="price-pill" href="/subscribe" title="দৈনিক ৳<?= e($dailyAmount) ?>, VAT/SD/SC-সহ">৳<?= e($dailyAmount) ?>/day (VAT-সহ)</a>
+    <a class="price-pill" href="/subscribe" title="Daily ৳<?= e($dailyAmount) ?> (Incl. VAT, SD &amp; SC)">
+      <span class="price-pill-short">৳<?= e($dailyAmount) ?>/day</span>
+      <span class="price-pill-full">Daily ৳<?= e($dailyAmount) ?> (Incl. VAT, SD &amp; SC)</span>
+    </a>
 
     <nav class="nav-links">
       <a href="/calculator">BMI Calculator</a>
@@ -65,7 +68,7 @@
   <p>Privacy Policy | Terms &amp; Conditions | Contact Us<br>
   Robi &amp; Airtel Bangladesh<br>
   &copy; <?= date('Y') ?> PustiSathi — সর্বস্বত্ব সংরক্ষিত</p>
-  <p>⚠️ Daily ৳<?= e($dailyAmount) ?> (VAT/SD/SC-সহ) আপনার Robi/Airtel মোবাইল ব্যালেন্স থেকে সরাসরি কাটা হবে।
+  <p>⚠️ Daily ৳<?= e($dailyAmount) ?> (Incl. VAT, SD &amp; SC) আপনার Robi/Airtel মোবাইল ব্যালেন্স থেকে সরাসরি কাটা হবে।
   Unsubscribe করতে STOP লিখে 16216 নম্বরে SMS করুন।</p>
 </footer>
 

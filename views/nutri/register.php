@@ -2,7 +2,8 @@
 
 <section class="card">
   <h1>Nutritionist হিসেবে Register করুন</h1>
-  <p>Admin আপনার Credential/License তথ্য যাচাই করার পর Approve করবেন — এটি Self-service নয়। Patient দের Profile ও Plan দেখতে, আপনাকেও একজন সাধারণ Subscriber-এর মতোই ৳<?= e($dailyAmount) ?>/day (VAT/SD/SC-সহ) Subscription চালু রাখতে হবে।</p>
+  <p>Admin আপনার Credential/License তথ্য যাচাই করার পর Approve করবেন — এটি Self-service নয়। Patient দের Profile ও Plan দেখতে, আপনাকেও একজন সাধারণ Subscriber-এর মতোই Subscription চালু রাখতে হবে।</p>
+  <?= \App\Core\View::partial('partials/price-line') ?>
 </section>
 
 <?php if ($step === 'phone'): ?>

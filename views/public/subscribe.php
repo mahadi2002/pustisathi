@@ -6,6 +6,7 @@
   <section class="card">
     <h2>কোড দিন</h2>
     <p><?= e(substr((string) $mobile, 0, 5)) ?>XXXXXX নম্বরে একটি কোড পাঠানো হয়েছে।</p>
+    <?= \App\Core\View::partial('partials/price-line') ?>
 
     <form method="post" action="/subscribe/verify" class="field">
       <?= csrf_field() ?>

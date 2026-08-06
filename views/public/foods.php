@@ -16,7 +16,7 @@
 <?php if ($capped): ?>
   <div class="alert alert-info">
     আজকের জন্য Free খোঁজার সীমা শেষ হয়ে গেছে।
-    <a href="/subscribe">Subscribe করুন</a> — Unlimited Search সহ পুরো Diet Plan পাবেন।
+    <a href="/subscribe">Subscribe Now</a> — Unlimited Search সহ পুরো Diet Plan পাবেন।
   </div>
 <?php elseif ($query !== '' && $results === []): ?>
   <div class="alert alert-info">"<?= e($query) ?>" এর সাথে মিলে এমন কোনো খাবার পাওয়া যায়নি।</div>
@@ -52,5 +52,6 @@
 <section class="card">
   <h2>সম্পূর্ণ Diet Plan চান?</h2>
   <p>শুধু পুষ্টিমান নয় — আপনার শরীর, বাজেট আর এলাকা বুঝে সাজানো সম্পূর্ণ দৈনিক খাবারের তালিকা পেতে Subscribe করুন।</p>
-  <a class="btn btn-accent" href="/subscribe">৳<?= e($dailyAmount) ?>/day (VAT/SD/SC-সহ) — এখনই শুরু করুন</a>
+  <?= \App\Core\View::partial('partials/price-line') ?>
+  <?= \App\Core\View::partial('partials/subscribe-now-button') ?>
 </section>

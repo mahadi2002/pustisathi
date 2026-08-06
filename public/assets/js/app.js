@@ -197,7 +197,7 @@ document.documentElement.classList.add('js');
 
     if (data.capped) {
       resultsHost.innerHTML = '<div class="alert alert-info">আজকের জন্য Free খোঁজার সীমা শেষ হয়ে গেছে। '
-        + '<a href="/subscribe">Subscribe করুন</a> — Unlimited Search সহ পুরো Diet Plan পাবেন।</div>';
+        + '<a href="/subscribe">Subscribe Now</a> — Unlimited Search সহ পুরো Diet Plan পাবেন।</div>';
       return;
     }
 

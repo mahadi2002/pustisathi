@@ -57,11 +57,10 @@
     </select>
 
     <label>স্বাস্থ্য সংক্রান্ত অবস্থা (যদি থাকে)</label>
-    <?php foreach ($conditions as $code):
-      $labels = ['diabetic' => 'ডায়াবেটিস', 'renal' => 'কিডনি সমস্যা', 'cardiac' => 'হৃদরোগ', 'pregnancy' => 'গর্ভাবস্থা']; ?>
+    <?php foreach ($conditions as $code): ?>
       <label class="checkbox-row">
         <input type="checkbox" name="medical_flags[]" value="<?= e($code) ?>" <?= in_array($code, $flags, true) ? 'checked' : '' ?>>
-        <?= e($labels[$code] ?? $code) ?>
+        <?= e(condition_label($code)) ?>
       </label>
     <?php endforeach; ?>
     <small class="hint">এই তথ্য AES-256 দিয়ে Encrypt করে রাখা হয়।</small>

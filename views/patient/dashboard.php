@@ -131,7 +131,7 @@ if (!empty($profile['region_id'])) {
         &nbsp; পরবর্তী Charge: <?= e(bn_date($subscription['next_charge_at'])) ?>
       <?php endif; ?>
     </p>
-    <p class="text-muted section-note">৳<?= e($dailyAmount) ?>/day (VAT/SD/SC-সহ), <?= e(ucfirst((string) $subscription['operator'])) ?> এর মাধ্যমে।</p>
+    <p class="text-muted section-note">Daily ৳<?= e($dailyAmount) ?> (Incl. VAT, SD &amp; SC), <?= e(ucfirst((string) $subscription['operator'])) ?> এর মাধ্যমে।</p>
   </section>
 <?php endif; ?>
 

@@ -24,13 +24,6 @@ final class DashboardController extends Controller
         'pregnancy' => 'গর্ভাবস্থায় ঝুঁকিপূর্ণ খাবার (কাঁচা/অপাস্তুরিত) বাদ দেওয়া হয়েছে, ফোলেট ও আয়রন সমৃদ্ধ খাবার অগ্রাধিকার পেয়েছে।',
     ];
 
-    private const CONDITION_LABELS = [
-        'diabetic'  => 'ডায়াবেটিস',
-        'renal'     => 'কিডনি সমস্যা',
-        'cardiac'   => 'হৃদরোগ',
-        'pregnancy' => 'গর্ভাবস্থা',
-    ];
-
     private const ACTIVITY_LABELS = [
         'sedentary'   => 'Sedentary (বসে কাজ)',
         'light'       => 'Light (হালকা পরিশ্রম)',
@@ -59,7 +52,7 @@ final class DashboardController extends Controller
         $conditionTips  = [];
         foreach ($conditionCodes as $code) {
             $conditionTips[] = [
-                'label' => self::CONDITION_LABELS[$code] ?? $code,
+                'label' => condition_label($code),
                 'tip'   => self::CONDITION_TIPS[$code] ?? null,
             ];
         }

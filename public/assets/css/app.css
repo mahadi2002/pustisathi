@@ -202,16 +202,29 @@ a:hover { color: var(--color-primary-dark); }
 }
 
 .price-pill {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   background: var(--color-accent);
   color: var(--on-accent);
   font-weight: 700;
   padding: 7px 14px;
   border-radius: 999px;
   font-size: .8rem;
+  white-space: nowrap;
   text-decoration: none;
   box-shadow: var(--shadow-sm);
   transition: transform var(--transition), box-shadow var(--transition);
+}
+
+/* The full legal price line is what shows everywhere else on the page
+   (hero, footer, subscribe box) — the nav pill only needs the short form
+   plus a title= tooltip, since a wrapped multi-line pill just looks broken. */
+.price-pill-full { display: none; }
+.price-pill-short { display: inline; }
+
+@media (min-width: 480px) {
+  .price-pill-full { display: inline; }
+  .price-pill-short { display: none; }
 }
 
 .price-pill:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); color: var(--on-accent); }
@@ -596,6 +609,8 @@ input[type=number]:focus, select:focus, textarea:focus {
 .hero h1 { font-size: 1.6rem; margin-bottom: .4em; position: relative; }
 .hero p { color: rgba(255,255,255,.92); max-width: 60ch; position: relative; }
 .hero .btn-accent { position: relative; }
+.hero-kicker { font-weight: 800; font-size: 1.1rem; margin-bottom: .3em; }
+.hero .price-line { margin-bottom: 16px; }
 
 @media (min-width: 700px) {
   .hero h1 { font-size: 2.1rem; }
@@ -724,7 +739,8 @@ input[type=number]:focus, select:focus, textarea:focus {
 .trust-item .feature-icon-badge { margin-left: auto; margin-right: auto; }
 .trust-item p { color: var(--color-muted); font-size: .88rem; margin: 4px 0 0; }
 
-.price-tag { font-weight: 800; color: var(--color-primary-dark); }
+.price-line { font-weight: 700; color: var(--color-primary-dark); font-size: .95rem; }
+.hero .price-line { color: #fff; font-size: 1.05rem; }
 
 .page-main { padding-top: 24px; padding-bottom: 24px; min-height: 60vh; }
 .site-footer { padding: 24px 16px 40px; color: var(--color-muted); font-size: .85rem; }

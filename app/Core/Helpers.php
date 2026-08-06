@@ -185,6 +185,25 @@ if (!function_exists('bmi_category')) {
     }
 }
 
+if (!function_exists('condition_label')) {
+    /**
+     * The single place condition_code -> Bangla label is defined. Onboarding,
+     * the dashboard, and the plan page all need this same mapping — keeping
+     * it in three separate places is exactly how the plan page ended up
+     * showing raw codes ("diabetic") instead of a label nobody had added yet.
+     */
+    function condition_label(string $code): string
+    {
+        return match ($code) {
+            'diabetic'  => 'ডায়াবেটিস',
+            'renal'     => 'কিডনি সমস্যা',
+            'cardiac'   => 'হৃদরোগ',
+            'pregnancy' => 'গর্ভাবস্থা',
+            default     => $code,
+        };
+    }
+}
+
 if (!function_exists('dd')) {
     function dd(mixed ...$vars): never
     {

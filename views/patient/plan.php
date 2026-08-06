@@ -17,7 +17,7 @@
        Carb <?= e((string) ($macros['carb_g'] ?? '—')) ?>g,
        Fat <?= e((string) ($macros['fat_g'] ?? '—')) ?>g</p>
     <?php if ($conditionCodes !== []): ?>
-      <p class="text-muted">বিবেচনায় নেওয়া হয়েছে: <?= e(implode(', ', $conditionCodes)) ?></p>
+      <p class="text-muted">বিবেচনায় নেওয়া হয়েছে: <?= e(implode(', ', array_map('condition_label', $conditionCodes))) ?></p>
     <?php endif; ?>
   </section>
 
@@ -27,23 +27,25 @@
     <?php if (!empty($plan['meals'][$slot])): ?>
       <section class="card meal-card">
         <h3><?= e($label) ?></h3>
-        <table class="compare-table">
-          <thead><tr><th>খাবার</th><th>পরিমাণ</th><th>kcal</th><th>Protein</th></tr></thead>
-          <tbody>
-            <?php foreach ($plan['meals'][$slot] as $item):
-              $grams = (float) $item['portion_grams'];
-              $kcal  = round($grams / 100 * (float) $item['per_100g_kcal']);
-              $protein = round($grams / 100 * (float) $item['per_100g_protein_g'], 1);
-            ?>
-              <tr>
-                <td><?= e($item['name_bn']) ?> <span class="text-muted">(<?= e($item['name_en']) ?>)</span></td>
-                <td><?= e(number_format($grams, 0)) ?>g</td>
-                <td><?= e((string) $kcal) ?></td>
-                <td><?= e((string) $protein) ?>g</td>
-              </tr>
-            <?php endforeach; ?>
-          </tbody>
-        </table>
+        <div class="compare-table-wrap">
+          <table class="compare-table">
+            <thead><tr><th>খাবার</th><th>পরিমাণ</th><th>kcal</th><th>Protein</th></tr></thead>
+            <tbody>
+              <?php foreach ($plan['meals'][$slot] as $item):
+                $grams = (float) $item['portion_grams'];
+                $kcal  = round($grams / 100 * (float) $item['per_100g_kcal']);
+                $protein = round($grams / 100 * (float) $item['per_100g_protein_g'], 1);
+              ?>
+                <tr>
+                  <td><?= e($item['name_bn']) ?> <span class="text-muted">(<?= e($item['name_en']) ?>)</span></td>
+                  <td><?= e(number_format($grams, 0)) ?>g</td>
+                  <td><?= e((string) $kcal) ?></td>
+                  <td><?= e((string) $protein) ?>g</td>
+                </tr>
+              <?php endforeach; ?>
+            </tbody>
+          </table>
+        </div>
       </section>
     <?php endif; ?>
   <?php endforeach; ?>

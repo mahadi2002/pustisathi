@@ -42,5 +42,7 @@
     <p>দৈনিক আনুমানিক ক্যালরি প্রয়োজন (BMR × Activity): <strong id="bmr-value"></strong> kcal</p>
   </div>
 
-  <a class="btn btn-accent" href="/subscribe">এই হিসাবের উপর ভিত্তি করে সম্পূর্ণ ডায়েট প্ল্যান চাই</a>
+  <p>এই হিসাবের উপর ভিত্তি করে সম্পূর্ণ ব্যক্তিগত ডায়েট প্ল্যান পেতে Subscribe করুন।</p>
+  <?= \App\Core\View::partial('partials/price-line') ?>
+  <?= \App\Core\View::partial('partials/subscribe-now-button') ?>
 </section>
