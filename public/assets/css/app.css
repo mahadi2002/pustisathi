@@ -103,28 +103,41 @@ a:hover { color: var(--color-primary-dark); }
   z-index: 30;
 }
 
-.site-header .container {
+.site-header::after {
+  content: '';
+  display: block;
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-accent) 50%, var(--color-tertiary) 100%);
+  opacity: .7;
+}
+
+/* :first-child, not the bare descendant selector — the public layout has
+   a second .container right after this one (wrapping the mobile nav
+   panel), and the old broad selector forced that one to the same fixed
+   height too, adding a block of dead space below the header even while
+   the mobile menu sat closed. */
+.site-header > .container:first-child {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  height: 64px;
+  height: 56px;
 }
 
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
   font-weight: 800;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   color: var(--color-primary-dark);
   text-decoration: none;
   white-space: nowrap;
 }
 
 .brand-mark {
-  width: 30px;
-  height: 30px;
+  width: 27px;
+  height: 27px;
   flex-shrink: 0;
 }
 
@@ -134,9 +147,9 @@ a:hover { color: var(--color-primary-dark); }
   background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-dark) 100%);
   color: var(--on-accent);
   font-weight: 700;
-  padding: 7px 14px;
+  padding: 6px 12px;
   border-radius: 999px;
-  font-size: .8rem;
+  font-size: .78rem;
   white-space: nowrap;
   text-decoration: none;
   box-shadow: var(--shadow-sm);
@@ -156,7 +169,7 @@ a:hover { color: var(--color-primary-dark); }
 
 .price-pill:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); color: var(--on-accent); }
 
-.nav-links { display: none; gap: 22px; align-items: center; }
+.nav-links { display: none; gap: 24px; align-items: center; }
 
 @media (min-width: 900px) {
   .nav-links { display: flex; }
@@ -164,6 +177,39 @@ a:hover { color: var(--color-primary-dark); }
 }
 
 .nav-logout-form { margin: 0; }
+
+.nav-links a,
+.nav-links .link-button {
+  position: relative;
+  font-weight: 600;
+  font-size: .92rem;
+  color: var(--color-text);
+  text-decoration: none;
+  padding: 4px 1px;
+}
+
+.nav-links a::after,
+.nav-links .link-button::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 100%;
+  bottom: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--color-primary);
+  transition: right var(--transition);
+}
+
+.nav-links a:hover,
+.nav-links .link-button:hover {
+  color: var(--color-primary);
+}
+
+.nav-links a:hover::after,
+.nav-links .link-button:hover::after {
+  right: 0;
+}
 
 .link-button {
   background: none;
@@ -181,13 +227,16 @@ a:hover { color: var(--color-primary-dark); }
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
   background: var(--color-surface);
   cursor: pointer;
+  transition: background var(--transition), transform var(--transition);
 }
+
+.nav-toggle:hover { background: var(--color-primary-light); transform: translateY(-1px); }
 
 .nav-toggle svg { width: 20px; height: 20px; }
 
@@ -717,7 +766,7 @@ input[type=number]:focus, select:focus, textarea:focus {
 .price-line { font-weight: 700; color: var(--color-primary-dark); font-size: .95rem; }
 .hero .price-line { color: #fff; font-size: 1.05rem; }
 
-.page-main { padding-top: 24px; padding-bottom: 24px; min-height: 60vh; }
+.page-main { padding-top: 18px; padding-bottom: 24px; min-height: 60vh; }
 .site-footer { padding: 24px 16px 40px; color: var(--color-muted); font-size: .85rem; }
 .error-page { text-align: center; padding: 60px 0; }
 .error-page h1 { font-size: 1.75rem; }
