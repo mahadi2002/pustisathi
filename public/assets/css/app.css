@@ -2,13 +2,19 @@
    a plum accent for tertiary highlights. Light theme by default, following
    system preference for dark, with a manual toggle (data-theme on <html>)
    that overrides both. No inline styles anywhere (CSP: style-src 'self');
-   dynamic percentages use the .w-pct-N / .plate-pct-N utility classes
-   generated below instead of style="width:". */
+   dynamic percentages use the .w-pct-N utility classes generated below
+   instead of style="width:". */
 
 :root {
   --color-primary: #0E7C74;
   --color-primary-dark: #0A5A54;
   --color-primary-light: #E1F2F0;
+  /* Text color for anything sitting on the --color-primary-light tint
+     specifically (badges, table headers) — kept separate from
+     --color-primary-dark because the pairing that reads well against a
+     tinted background isn't always the same pairing that reads well
+     against plain surface/bg, and that split flips between themes. */
+  --color-primary-on-tint: #0A5A54;
   --color-accent: #E8734A;
   --color-accent-dark: #C8582F;
   --color-plum: #7A4C8A;
@@ -19,7 +25,9 @@
   --color-text: #1A2624;
   --color-muted: #5C6E6A;
   --color-border: #E1E8E6;
-  --on-accent: #FFFFFF;
+  /* Dark, not white — the accent is a mid-tone coral, and white text on it
+     fails contrast at the lighter end of what used to be a gradient. */
+  --on-accent: #221208;
   --on-primary: #FFFFFF;
 
   --color-success-bg: #E1F2EE;
@@ -52,6 +60,7 @@
     --color-primary: #4DBDB3;
     --color-primary-dark: #3A9C93;
     --color-primary-light: #163330;
+    --color-primary-on-tint: #4DBDB3;
     --color-accent: #F2946D;
     --color-accent-dark: #D97A50;
     --color-plum: #B58BC7;
@@ -86,6 +95,7 @@
   --color-primary: #4DBDB3;
   --color-primary-dark: #3A9C93;
   --color-primary-light: #163330;
+  --color-primary-on-tint: #4DBDB3;
   --color-accent: #F2946D;
   --color-accent-dark: #D97A50;
   --color-plum: #B58BC7;
@@ -193,7 +203,7 @@ a:hover { color: var(--color-primary-dark); }
 
 .price-pill {
   display: inline-block;
-  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-dark) 100%);
+  background: var(--color-accent);
   color: var(--on-accent);
   font-weight: 700;
   padding: 7px 14px;
@@ -335,7 +345,10 @@ a:hover { color: var(--color-primary-dark); }
 
 .btn:hover { background: var(--color-primary-dark); transform: translateY(-1px); box-shadow: var(--shadow-md); color: var(--on-primary); }
 .btn:active { transform: translateY(0); }
-.btn-accent { background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-dark) 100%); color: var(--on-accent); }
+/* Solid, not a gradient to accent-dark — that gradient's darker end failed
+   contrast with either text color, since the two ends need opposite text
+   colors to read well (confirmed by direct contrast-ratio calculation). */
+.btn-accent { background: var(--color-accent); color: var(--on-accent); }
 .btn-accent:hover { color: var(--on-accent); }
 .btn-outline { background: var(--color-surface); color: var(--color-primary); border: 2px solid var(--color-primary); box-shadow: none; }
 .btn-outline:hover { background: var(--color-primary-light); color: var(--color-primary-dark); }
@@ -365,6 +378,8 @@ input[type=number]:focus, select:focus, textarea:focus {
 }
 
 .field { margin-bottom: 18px; }
+.button-row { display: flex; gap: 10px; margin-bottom: 18px; }
+.button-row form { margin: 0; }
 .field small.hint { display: block; color: var(--color-muted); margin-top: 4px; font-size: .8rem; }
 .field .error { color: var(--color-alert); font-size: .85rem; margin-top: 4px; display: block; }
 
@@ -401,29 +416,6 @@ input[type=number]:focus, select:focus, textarea:focus {
   margin-bottom: 20px;
 }
 
-/* -- থালা (plate) meter ------------------------------------------------- */
-
-.plate-meter {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  border: 10px solid var(--color-border);
-  position: relative;
-  display: grid;
-  place-items: center;
-  margin: 0 auto;
-}
-
-.plate-meter .plate-fill {
-  position: absolute;
-  inset: -10px;
-  border-radius: 50%;
-  border: 10px solid var(--color-primary);
-  clip-path: inset(0 0 0 0);
-}
-
-.plate-meter .plate-value { font-weight: 800; font-size: 1.1rem; }
-
 .hp-trap { position: absolute; left: -9999px; top: -9999px; width: 1px; height: 1px; overflow: hidden; }
 
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
@@ -437,12 +429,132 @@ input[type=number]:focus, select:focus, textarea:focus {
 .checkbox-row { display: flex; align-items: center; gap: 8px; font-weight: 400; margin-bottom: 8px; }
 .checkbox-row input { width: auto; }
 
-.dashboard-summary { display: flex; flex-wrap: wrap; gap: 24px; align-items: center; justify-content: center; text-align: center; }
-.macro-legend p { margin: 0 0 4px; }
-
 .meal-card h3 { color: var(--color-primary-dark); }
 .meal-items { margin: 0; padding-left: 20px; }
 .meal-items li { margin-bottom: 4px; }
+
+/* -- Dashboard: stat grid ------------------------------------------------- */
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+@media (min-width: 640px) {
+  .stat-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+.stat-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 16px;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+}
+
+.stat-card .stat-value { font-size: 1.4rem; font-weight: 800; color: var(--color-primary-dark); display: block; }
+.stat-card .stat-label { font-size: .78rem; color: var(--color-muted); }
+
+/* -- Dashboard: macro breakdown bars (replaces the old progress ring, whose
+   fill showed protein's share of calories while its center label showed an
+   unrelated number — the two never agreed on what was being measured) --- */
+
+.macro-bars { margin-bottom: 20px; }
+
+.macro-bar-row { margin-bottom: 14px; }
+.macro-bar-row:last-child { margin-bottom: 0; }
+
+.macro-bar-head {
+  display: flex;
+  justify-content: space-between;
+  font-size: .88rem;
+  margin-bottom: 5px;
+}
+
+.macro-bar-head .macro-name { font-weight: 700; }
+.macro-bar-head .macro-detail { color: var(--color-muted); }
+
+.macro-bar-track {
+  height: 10px;
+  border-radius: 999px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+}
+
+.macro-bar-fill { height: 100%; border-radius: 999px; transition: width 480ms ease; }
+.macro-bar-fill.protein { background: var(--color-primary); }
+.macro-bar-fill.carb { background: var(--color-accent); }
+.macro-bar-fill.fat { background: var(--color-plum); }
+
+/* -- Dashboard: condition tips, subscription status, profile summary ---- */
+
+.tip-card {
+  background: var(--color-primary-light);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  margin-bottom: 10px;
+}
+
+.tip-card .tip-label { font-weight: 700; color: var(--color-primary-on-tint); display: block; margin-bottom: 4px; }
+.tip-card p { margin: 0; font-size: .9rem; }
+
+.status-pill {
+  display: inline-block;
+  padding: 3px 12px;
+  border-radius: 999px;
+  font-size: .8rem;
+  font-weight: 700;
+}
+
+.status-pill.active { background: var(--color-success-bg); color: var(--color-success-text); }
+.status-pill.grace { background: var(--color-warn-bg); color: var(--color-warn-text); }
+.status-pill.other { background: var(--color-error-bg); color: var(--color-error-text); }
+
+.profile-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px 20px;
+  font-size: .92rem;
+  margin-bottom: 14px;
+}
+
+@media (min-width: 640px) {
+  .profile-summary-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+.profile-summary-grid dt { color: var(--color-muted); font-size: .8rem; }
+.profile-summary-grid dd { margin: 0; font-weight: 600; }
+
+/* -- Dashboard: collapsible meal sections (native <details>, zero JS) ---- */
+
+.meal-details {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  margin-bottom: 12px;
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.meal-details summary {
+  cursor: pointer;
+  padding: 14px 16px;
+  font-weight: 700;
+  color: var(--color-primary-dark);
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.meal-details summary::-webkit-details-marker { display: none; }
+.meal-details summary::after { content: '+'; font-size: 1.3rem; color: var(--color-muted); }
+.meal-details[open] summary::after { content: '\2212'; }
+.meal-details .meal-items { padding: 0 16px 14px; }
 
 /* -- Landing page ------------------------------------------------------- */
 
@@ -577,7 +689,7 @@ input[type=number]:focus, select:focus, textarea:focus {
 }
 
 .soon-badge { background: var(--color-plum-light); color: var(--color-plum); }
-.live-badge { background: var(--color-primary-light); color: var(--color-primary-dark); }
+.live-badge { background: var(--color-primary-light); color: var(--color-primary-on-tint); }
 
 .compare-table-wrap { overflow-x: auto; margin-bottom: 20px; }
 
@@ -585,7 +697,7 @@ input[type=number]:focus, select:focus, textarea:focus {
 .compare-table th, .compare-table td { padding: 13px 14px; text-align: left; border-bottom: 1px solid var(--color-border); font-size: .92rem; }
 .compare-table tbody tr:last-child td { border-bottom: none; }
 .compare-table tbody tr:hover { background: var(--color-bg); }
-.compare-table th { background: var(--color-primary-light); color: var(--color-primary-dark); font-weight: 700; }
+.compare-table th { background: var(--color-primary-light); color: var(--color-primary-on-tint); font-weight: 700; }
 .compare-table td.yes { color: var(--color-primary-dark); font-weight: 700; }
 .compare-table td.locked { color: var(--color-muted); }
 .compare-table td.soon { color: var(--color-plum); font-weight: 600; }
@@ -641,29 +753,6 @@ input[type=number]:focus, select:focus, textarea:focus {
 .w-pct-90 { width: 90%; }
 .w-pct-95 { width: 95%; }
 .w-pct-100 { width: 100%; }
-
-/* macro/plate ring fill uses the same steps via conic-gradient on --pct */
-.plate-pct-0 .plate-fill { background: conic-gradient(var(--color-primary) 0 0%, transparent 0% 100%); border-color: transparent; }
-.plate-pct-5 .plate-fill { background: conic-gradient(var(--color-primary) 0 5%, transparent 5% 100%); border-color: transparent; }
-.plate-pct-10 .plate-fill { background: conic-gradient(var(--color-primary) 0 10%, transparent 10% 100%); border-color: transparent; }
-.plate-pct-15 .plate-fill { background: conic-gradient(var(--color-primary) 0 15%, transparent 15% 100%); border-color: transparent; }
-.plate-pct-20 .plate-fill { background: conic-gradient(var(--color-primary) 0 20%, transparent 20% 100%); border-color: transparent; }
-.plate-pct-25 .plate-fill { background: conic-gradient(var(--color-primary) 0 25%, transparent 25% 100%); border-color: transparent; }
-.plate-pct-30 .plate-fill { background: conic-gradient(var(--color-primary) 0 30%, transparent 30% 100%); border-color: transparent; }
-.plate-pct-35 .plate-fill { background: conic-gradient(var(--color-primary) 0 35%, transparent 35% 100%); border-color: transparent; }
-.plate-pct-40 .plate-fill { background: conic-gradient(var(--color-primary) 0 40%, transparent 40% 100%); border-color: transparent; }
-.plate-pct-45 .plate-fill { background: conic-gradient(var(--color-primary) 0 45%, transparent 45% 100%); border-color: transparent; }
-.plate-pct-50 .plate-fill { background: conic-gradient(var(--color-primary) 0 50%, transparent 50% 100%); border-color: transparent; }
-.plate-pct-55 .plate-fill { background: conic-gradient(var(--color-primary) 0 55%, transparent 55% 100%); border-color: transparent; }
-.plate-pct-60 .plate-fill { background: conic-gradient(var(--color-primary) 0 60%, transparent 60% 100%); border-color: transparent; }
-.plate-pct-65 .plate-fill { background: conic-gradient(var(--color-primary) 0 65%, transparent 65% 100%); border-color: transparent; }
-.plate-pct-70 .plate-fill { background: conic-gradient(var(--color-primary) 0 70%, transparent 70% 100%); border-color: transparent; }
-.plate-pct-75 .plate-fill { background: conic-gradient(var(--color-primary) 0 75%, transparent 75% 100%); border-color: transparent; }
-.plate-pct-80 .plate-fill { background: conic-gradient(var(--color-primary) 0 80%, transparent 80% 100%); border-color: transparent; }
-.plate-pct-85 .plate-fill { background: conic-gradient(var(--color-primary) 0 85%, transparent 85% 100%); border-color: transparent; }
-.plate-pct-90 .plate-fill { background: conic-gradient(var(--color-primary) 0 90%, transparent 90% 100%); border-color: transparent; }
-.plate-pct-95 .plate-fill { background: conic-gradient(var(--color-primary) 0 95%, transparent 95% 100%); border-color: transparent; }
-.plate-pct-100 .plate-fill { background: conic-gradient(var(--color-primary) 0 100%, transparent 100% 100%); border-color: transparent; }
 
 /* -- Scroll-reveal (progressive enhancement — content is visible either way) -- */
 

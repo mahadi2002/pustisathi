@@ -63,6 +63,17 @@ final class DietPlanEngine
     private const MIN_PORTION_GRAMS = 20.0;
     private const MAX_PORTION_GRAMS = 400.0;
 
+    /** Exposed so the dashboard can show BMR/TDEE as their own figures, not just the final target. */
+    public static function bmrFor(array $profile): float
+    {
+        return self::bmr((int) $profile['age'], (string) $profile['sex'], (float) $profile['weight_kg'], (float) $profile['height_cm']);
+    }
+
+    public static function activityMultiplierFor(string $activityLevel): float
+    {
+        return self::ACTIVITY_MULTIPLIERS[$activityLevel] ?? 1.2;
+    }
+
     /** The active plan plus its meal lines, grouped by slot and joined to food names/macros. */
     public static function currentPlan(int $userId): ?array
     {

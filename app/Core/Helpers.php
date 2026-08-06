@@ -161,14 +161,27 @@ if (!function_exists('slugify')) {
 if (!function_exists('pct_step')) {
     /**
      * Round a 0-100 value to the nearest 5 for the .w-pct-N utility classes
-     * that drive the থালা (plate) meter — the CSP has no unsafe-inline, so a
-     * dynamic percentage can never be written as style="width:N%".
+     * that drive the dashboard's macro bars — the CSP has no unsafe-inline,
+     * so a dynamic percentage can never be written as style="width:N%".
      */
     function pct_step(float $value, float $max = 100.0): int
     {
         $pct = $max > 0 ? ($value / $max) * 100 : 0.0;
         $pct = max(0.0, min(100.0, $pct));
         return (int) (round($pct / 5) * 5);
+    }
+}
+
+if (!function_exists('bmi_category')) {
+    /** Asian BMI cutoffs (matches the public calculator) — Bangladeshi clinical practice uses these, not the WHO general set. */
+    function bmi_category(float $bmi): string
+    {
+        return match (true) {
+            $bmi < 18.5 => 'Underweight',
+            $bmi < 23.0 => 'Normal',
+            $bmi < 25.0 => 'Overweight',
+            default     => 'Obese',
+        };
     }
 }
 
