@@ -5,46 +5,6 @@
 document.documentElement.classList.remove('no-js');
 document.documentElement.classList.add('js');
 
-/* Light/dark theme toggle. Runs first since it decides how the page looks;
-   deferred script execution still means a brief flash of the wrong theme
-   on first paint is possible — the CSP here has no 'unsafe-inline', so
-   there's no earlier point a script could run instead. */
-(function () {
-  var STORAGE_KEY = 'ps_theme';
-  var root = document.documentElement;
-  var toggle = document.getElementById('theme-toggle');
-
-  function systemPrefersDark() {
-    return !!(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
-  }
-
-  function storedTheme() {
-    try {
-      return localStorage.getItem(STORAGE_KEY);
-    } catch (e) {
-      return null;
-    }
-  }
-
-  function applyTheme(theme) {
-    root.setAttribute('data-theme', theme);
-  }
-
-  applyTheme(storedTheme() || (systemPrefersDark() ? 'dark' : 'light'));
-
-  if (toggle) {
-    toggle.addEventListener('click', function () {
-      var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-      applyTheme(next);
-      try {
-        localStorage.setItem(STORAGE_KEY, next);
-      } catch (e) {
-        // Private browsing or storage disabled — theme just won't persist across visits.
-      }
-    });
-  }
-})();
-
 /* Mobile nav toggle — plain show/hide, no framework needed for one menu. */
 (function () {
   var toggle = document.getElementById('nav-toggle');

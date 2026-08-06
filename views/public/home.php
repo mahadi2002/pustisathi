@@ -83,6 +83,39 @@
 </div>
 
 <h2 class="section-title">Free বনাম Subscriber</h2>
+<p class="section-sub">দুটোই ব্যবহার করে দেখুন — কোনটা আপনার জন্য ঠিক, নিজেই বুঝবেন।</p>
+
+<div class="plan-cards">
+  <div class="plan-card reveal">
+    <h3>Free — সবার জন্য</h3>
+    <p class="plan-card-price">কোনো Sign up বা মোবাইল নম্বর লাগবে না</p>
+    <ul>
+      <li>BMI, BMR ও দৈনিক আনুমানিক ক্যালরি চাহিদা হিসাব — Unlimited ব্যবহার</li>
+      <li>খাবারের পুষ্টিমান (ক্যালরি, Protein, Carb, Fat) খোঁজা — দিনে <?= e((string) config('app.foods.search_daily_cap_guest', 10)) ?> বার পর্যন্ত</li>
+      <li>সহজ, স্পষ্ট বাংলায় ফলাফল — জটিল মেডিকেল Term ছাড়াই</li>
+      <li>ওয়েবসাইট ব্রাউজ করেই ব্যবহার করা যায়, কোনো Install লাগে না</li>
+    </ul>
+    <a class="btn btn-outline btn-block" href="/calculator">Free এ শুরু করুন</a>
+  </div>
+  <div class="plan-card is-premium reveal">
+    <span class="plan-card-badge">সম্পূর্ণ Access</span>
+    <h3>Subscriber — সম্পূর্ণ সমাধান</h3>
+    <p class="plan-card-price">Daily ৳<?= e($dailyAmount) ?> (Incl. VAT, SD &amp; SC)</p>
+    <ul>
+      <li>বয়স, ওজন, উচ্চতা ও Activity Level অনুযায়ী সম্পূর্ণ ব্যক্তিগত Diet Plan</li>
+      <li>ডায়াবেটিস, কিডনি সমস্যা, হৃদরোগ ও গর্ভাবস্থার জন্য আলাদা নির্দেশনা</li>
+      <li>আপনার বাজেট (Low/Mid/High) মেনে খাবার নির্বাচন — বাস্তবতার বাইরে যাবে না</li>
+      <li>আপনার জেলা/উপজেলায় সহজে পাওয়া যায় এমন খাবারকে অগ্রাধিকার</li>
+      <li>খাবার খোঁজায় কোনো দৈনিক সীমা নেই — Unlimited</li>
+      <li>প্রোফাইল বদলালে বা চাইলেই নতুন করে Plan তৈরি (Regenerate) করুন</li>
+      <li>স্বাস্থ্য তথ্য AES-256 দিয়ে Encrypted — Plaintext-এ কোথাও সংরক্ষণ হয় না</li>
+      <li>যেকোনো সময় Unsubscribe — SMS-এ STOP লিখে 16216 নম্বরে পাঠালেই হয়</li>
+    </ul>
+    <?= \App\Core\View::partial('partials/subscribe-now-button', ['class' => 'btn btn-accent btn-block']) ?>
+  </div>
+</div>
+
+<p class="section-sub">ফিচার অনুযায়ী পুরো তালিকা নিচে:</p>
 <div class="compare-table-wrap">
   <table class="compare-table">
     <thead>

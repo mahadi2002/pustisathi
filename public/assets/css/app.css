@@ -1,10 +1,8 @@
 /* PustiSathi — a fresh clinical design system: sea-blue primary (trust,
    health) with an amber accent for calls to action and a soft green
-   tertiary for highlights. Light theme by default, following system
-   preference for dark, with a manual toggle (data-theme on <html>) that
-   overrides both. No inline styles anywhere (CSP: style-src 'self');
-   dynamic percentages use the .w-pct-N utility classes generated below
-   instead of style="width:". */
+   tertiary for highlights. Light theme only. No inline styles anywhere
+   (CSP: style-src 'self'); dynamic percentages use the .w-pct-N utility
+   classes generated below instead of style="width:". */
 
 :root {
   --color-primary: #0E7490;
@@ -52,79 +50,6 @@
   --transition: 160ms ease;
 }
 
-/* Dark palette — applied when the OS prefers dark (unless the user picked
-   light explicitly), or whenever the user has explicitly picked dark via
-   the toggle. Two separate blocks rather than nesting @media inside a
-   selector, since that nesting form is too new to rely on everywhere. */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --color-primary: #22D3EE;
-    --color-primary-dark: #06B6D4;
-    --color-primary-light: #103A45;
-    --color-primary-on-tint: #22D3EE;
-    --color-accent: #FBBF24;
-    --color-accent-dark: #F59E0B;
-    --color-tertiary: #4ADE80;
-    --color-tertiary-light: #14301F;
-    --color-alert: #EF9A9A;
-    --color-bg: #101615;
-    --color-surface: #1A2321;
-    --color-text: #E7EDEB;
-    --color-muted: #93A6A1;
-    --color-border: #2A3634;
-    --on-accent: #221208;
-    --on-primary: #0A1F1D;
-
-    --color-success-bg: #163330;
-    --color-success-text: #7BD9CD;
-    --color-error-bg: #3A2020;
-    --color-error-text: #EF9A9A;
-    --color-info-bg: #33251C;
-    --color-info-text: #F2AE87;
-    --color-warn-bg: #33251C;
-    --color-warn-text: #F2AE87;
-    --color-warn-border: #5A3A24;
-
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
-    --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.4);
-    --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.5);
-  }
-}
-
-/* Explicit dark pick always wins, system preference or not. */
-:root[data-theme="dark"] {
-  --color-primary: #22D3EE;
-  --color-primary-dark: #06B6D4;
-  --color-primary-light: #103A45;
-  --color-primary-on-tint: #22D3EE;
-  --color-accent: #FBBF24;
-  --color-accent-dark: #F59E0B;
-  --color-tertiary: #4ADE80;
-  --color-tertiary-light: #14301F;
-  --color-alert: #EF9A9A;
-  --color-bg: #101615;
-  --color-surface: #1A2321;
-  --color-text: #E7EDEB;
-  --color-muted: #93A6A1;
-  --color-border: #2A3634;
-  --on-accent: #221208;
-  --on-primary: #0A1F1D;
-
-  --color-success-bg: #163330;
-  --color-success-text: #7BD9CD;
-  --color-error-bg: #3A2020;
-  --color-error-text: #EF9A9A;
-  --color-info-bg: #33251C;
-  --color-info-text: #F2AE87;
-  --color-warn-bg: #33251C;
-  --color-warn-text: #F2AE87;
-  --color-warn-border: #5A3A24;
-
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
-  --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.5);
-}
-
 * { box-sizing: border-box; }
 
 html { scroll-behavior: smooth; }
@@ -169,7 +94,7 @@ a:hover { color: var(--color-primary-dark); }
 /* -- Header / nav ---------------------------------------------------- */
 
 .site-header {
-  background: rgba(255, 255, 255, 0.9);
+  background: color-mix(in srgb, var(--color-surface) 90%, transparent);
   backdrop-filter: saturate(180%) blur(10px);
   -webkit-backdrop-filter: saturate(180%) blur(10px);
   border-bottom: 1px solid var(--color-border);
@@ -249,29 +174,6 @@ a:hover { color: var(--color-primary-dark); }
   cursor: pointer;
   text-decoration: underline;
 }
-
-/* -- Theme toggle --------------------------------------------------------- */
-
-.theme-toggle {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  flex-shrink: 0;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  background: var(--color-surface);
-  color: var(--color-text);
-  cursor: pointer;
-  transition: background var(--transition), transform var(--transition);
-}
-
-.theme-toggle:hover { background: var(--color-primary-light); transform: translateY(-1px); }
-.theme-toggle svg { width: 20px; height: 20px; }
-.theme-toggle .icon-moon { display: none; }
-:root[data-theme="dark"] .theme-toggle .icon-sun { display: none; }
-:root[data-theme="dark"] .theme-toggle .icon-moon { display: block; }
 
 /* -- Mobile nav toggle --------------------------------------------------- */
 
@@ -715,6 +617,69 @@ input[type=number]:focus, select:focus, textarea:focus {
 
 .soon-badge { background: var(--color-tertiary-light); color: var(--color-tertiary); }
 .live-badge { background: var(--color-primary-light); color: var(--color-primary-on-tint); }
+
+/* -- Free vs Subscriber plan cards --------------------------------------- */
+
+.plan-cards {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 1fr;
+  margin-bottom: 24px;
+}
+
+@media (min-width: 700px) {
+  .plan-cards { grid-template-columns: repeat(2, 1fr); }
+}
+
+.plan-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+}
+
+.plan-card.is-premium {
+  border: 2px solid var(--color-primary);
+  box-shadow: var(--shadow-md);
+}
+
+.plan-card-badge {
+  position: absolute;
+  top: -13px;
+  right: 20px;
+  background: var(--color-accent);
+  color: var(--on-accent);
+  font-size: .72rem;
+  font-weight: 800;
+  padding: 3px 12px;
+  border-radius: 999px;
+  box-shadow: var(--shadow-sm);
+}
+
+.plan-card h3 { margin-bottom: 2px; }
+.plan-card-price { color: var(--color-muted); font-size: .88rem; margin-bottom: 16px; }
+
+.plan-card ul { list-style: none; margin: 0 0 18px; padding: 0; }
+
+.plan-card li {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  margin-bottom: 10px;
+  font-size: .92rem;
+  line-height: 1.4;
+}
+
+.plan-card li::before {
+  content: '✓';
+  color: var(--color-primary);
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.plan-card.is-premium li::before { color: var(--color-accent-dark); }
 
 .compare-table-wrap { overflow-x: auto; margin-bottom: 20px; }
 

@@ -21,7 +21,6 @@
         <button type="submit" class="link-button">Logout</button>
       </form>
     </nav>
-    <?= \App\Core\View::partial('partials/theme-toggle-button') ?>
   </div>
 </header>
 

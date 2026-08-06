@@ -31,8 +31,6 @@
       <?php endif; ?>
     </nav>
 
-    <?= \App\Core\View::partial('partials/theme-toggle-button') ?>
-
     <button type="button" class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="nav-links-mobile" aria-label="Menu">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
     </button>
