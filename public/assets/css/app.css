@@ -1,28 +1,116 @@
-/* PustiSathi — "সবুজ থালা" (Green Plate) design system. No inline styles
-   anywhere (CSP: style-src 'self'); dynamic percentages use the .w-pct-N /
-   .plate-pct-N utility classes generated below instead of style="width:". */
+/* PustiSathi — "উষ্ণ থালা" (Warm Plate) design system: deep teal + coral,
+   a plum accent for tertiary highlights. Light theme by default, following
+   system preference for dark, with a manual toggle (data-theme on <html>)
+   that overrides both. No inline styles anywhere (CSP: style-src 'self');
+   dynamic percentages use the .w-pct-N / .plate-pct-N utility classes
+   generated below instead of style="width:". */
 
 :root {
-  --color-primary: #2E7D32;
-  --color-primary-dark: #1b5e20;
-  --color-primary-light: #E7F3E8;
-  --color-accent: #F9A825;
-  --color-accent-dark: #b9770f;
+  --color-primary: #0E7C74;
+  --color-primary-dark: #0A5A54;
+  --color-primary-light: #E1F2F0;
+  --color-accent: #E8734A;
+  --color-accent-dark: #C8582F;
+  --color-plum: #7A4C8A;
+  --color-plum-light: #F1E7F4;
   --color-alert: #C62828;
-  --color-bg: #F6F8F5;
+  --color-bg: #F7F9F8;
   --color-surface: #FFFFFF;
-  --color-text: #1B241C;
-  --color-muted: #5B6B5D;
-  --color-border: #E3E8DF;
+  --color-text: #1A2624;
+  --color-muted: #5C6E6A;
+  --color-border: #E1E8E6;
+  --on-accent: #FFFFFF;
+  --on-primary: #FFFFFF;
+
+  --color-success-bg: #E1F2EE;
+  --color-success-text: #0A5A54;
+  --color-error-bg: #FBE9E7;
+  --color-error-text: #C62828;
+  --color-info-bg: #FDEEE6;
+  --color-info-text: #A24A1F;
+  --color-warn-bg: #FDEEE6;
+  --color-warn-text: #8A3D18;
+  --color-warn-border: #F2CBB0;
+
   --radius-sm: 8px;
   --radius: 14px;
   --radius-lg: 20px;
-  --shadow-sm: 0 1px 2px rgba(20, 40, 20, 0.06);
-  --shadow-md: 0 6px 20px rgba(20, 40, 20, 0.08);
-  --shadow-lg: 0 16px 40px rgba(20, 40, 20, 0.14);
+  --shadow-sm: 0 1px 2px rgba(10, 30, 28, 0.07);
+  --shadow-md: 0 6px 20px rgba(10, 30, 28, 0.10);
+  --shadow-lg: 0 16px 40px rgba(10, 30, 28, 0.16);
   --font-bn: 'Hind Siliguri', 'Noto Sans Bengali', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --font-en: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --transition: 160ms ease;
+}
+
+/* Dark palette — applied when the OS prefers dark (unless the user picked
+   light explicitly), or whenever the user has explicitly picked dark via
+   the toggle. Two separate blocks rather than nesting @media inside a
+   selector, since that nesting form is too new to rely on everywhere. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-primary: #4DBDB3;
+    --color-primary-dark: #3A9C93;
+    --color-primary-light: #163330;
+    --color-accent: #F2946D;
+    --color-accent-dark: #D97A50;
+    --color-plum: #B58BC7;
+    --color-plum-light: #2E2438;
+    --color-alert: #EF9A9A;
+    --color-bg: #101615;
+    --color-surface: #1A2321;
+    --color-text: #E7EDEB;
+    --color-muted: #93A6A1;
+    --color-border: #2A3634;
+    --on-accent: #221208;
+    --on-primary: #0A1F1D;
+
+    --color-success-bg: #163330;
+    --color-success-text: #7BD9CD;
+    --color-error-bg: #3A2020;
+    --color-error-text: #EF9A9A;
+    --color-info-bg: #33251C;
+    --color-info-text: #F2AE87;
+    --color-warn-bg: #33251C;
+    --color-warn-text: #F2AE87;
+    --color-warn-border: #5A3A24;
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
+    --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.5);
+  }
+}
+
+/* Explicit dark pick always wins, system preference or not. */
+:root[data-theme="dark"] {
+  --color-primary: #4DBDB3;
+  --color-primary-dark: #3A9C93;
+  --color-primary-light: #163330;
+  --color-accent: #F2946D;
+  --color-accent-dark: #D97A50;
+  --color-plum: #B58BC7;
+  --color-plum-light: #2E2438;
+  --color-alert: #EF9A9A;
+  --color-bg: #101615;
+  --color-surface: #1A2321;
+  --color-text: #E7EDEB;
+  --color-muted: #93A6A1;
+  --color-border: #2A3634;
+  --on-accent: #221208;
+
+  --color-success-bg: #163330;
+  --color-success-text: #7BD9CD;
+  --color-error-bg: #3A2020;
+  --color-error-text: #EF9A9A;
+  --color-info-bg: #33251C;
+  --color-info-text: #F2AE87;
+  --color-warn-bg: #33251C;
+  --color-warn-text: #F2AE87;
+  --color-warn-border: #5A3A24;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.5);
 }
 
 * { box-sizing: border-box; }
@@ -106,7 +194,7 @@ a:hover { color: var(--color-primary-dark); }
 .price-pill {
   display: inline-block;
   background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-dark) 100%);
-  color: #3a2a00;
+  color: var(--on-accent);
   font-weight: 700;
   padding: 7px 14px;
   border-radius: 999px;
@@ -116,7 +204,7 @@ a:hover { color: var(--color-primary-dark); }
   transition: transform var(--transition), box-shadow var(--transition);
 }
 
-.price-pill:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); color: #3a2a00; }
+.price-pill:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); color: var(--on-accent); }
 
 .nav-links { display: none; gap: 22px; align-items: center; }
 
@@ -136,6 +224,29 @@ a:hover { color: var(--color-primary-dark); }
   cursor: pointer;
   text-decoration: underline;
 }
+
+/* -- Theme toggle --------------------------------------------------------- */
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: background var(--transition), transform var(--transition);
+}
+
+.theme-toggle:hover { background: var(--color-primary-light); transform: translateY(-1px); }
+.theme-toggle svg { width: 20px; height: 20px; }
+.theme-toggle .icon-moon { display: none; }
+:root[data-theme="dark"] .theme-toggle .icon-sun { display: none; }
+:root[data-theme="dark"] .theme-toggle .icon-moon { display: block; }
 
 /* -- Mobile nav toggle --------------------------------------------------- */
 
@@ -209,7 +320,7 @@ a:hover { color: var(--color-primary-dark); }
 .btn {
   display: inline-block;
   background: var(--color-primary);
-  color: #fff;
+  color: var(--on-primary);
   border: none;
   padding: 13px 24px;
   border-radius: var(--radius);
@@ -222,10 +333,10 @@ a:hover { color: var(--color-primary-dark); }
   transition: transform var(--transition), box-shadow var(--transition), background var(--transition);
 }
 
-.btn:hover { background: var(--color-primary-dark); transform: translateY(-1px); box-shadow: var(--shadow-md); color: #fff; }
+.btn:hover { background: var(--color-primary-dark); transform: translateY(-1px); box-shadow: var(--shadow-md); color: var(--on-primary); }
 .btn:active { transform: translateY(0); }
-.btn-accent { background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-dark) 100%); color: #3a2a00; }
-.btn-accent:hover { color: #3a2a00; }
+.btn-accent { background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-dark) 100%); color: var(--on-accent); }
+.btn-accent:hover { color: var(--on-accent); }
 .btn-outline { background: var(--color-surface); color: var(--color-primary); border: 2px solid var(--color-primary); box-shadow: none; }
 .btn-outline:hover { background: var(--color-primary-light); color: var(--color-primary-dark); }
 .btn-block { display: block; width: 100%; }
@@ -276,17 +387,17 @@ input[type=number]:focus, select:focus, textarea:focus {
   font-weight: 600;
 }
 
-.alert-success { background: #E7F3E8; color: var(--color-primary-dark); }
-.alert-error   { background: #FBE9E7; color: var(--color-alert); }
-.alert-info    { background: #FFF7E0; color: #7a5c00; }
+.alert-success { background: var(--color-success-bg); color: var(--color-success-text); }
+.alert-error   { background: var(--color-error-bg); color: var(--color-error-text); }
+.alert-info    { background: var(--color-info-bg); color: var(--color-info-text); }
 
 .disclaimer {
-  background: #FFF7E0;
-  border: 1px solid #f0dca0;
+  background: var(--color-warn-bg);
+  border: 1px solid var(--color-warn-border);
   border-radius: var(--radius);
   padding: 14px 16px;
   font-size: .9rem;
-  color: #5c4700;
+  color: var(--color-warn-text);
   margin-bottom: 20px;
 }
 
@@ -336,7 +447,10 @@ input[type=number]:focus, select:focus, textarea:focus {
 /* -- Landing page ------------------------------------------------------- */
 
 .hero {
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  /* A fixed brand gradient rather than the theme-adaptive primary — dark
+     mode's primary lightens for contrast against a dark page background,
+     which would fight with the white text this band always needs. */
+  background: linear-gradient(135deg, #0E7C74 0%, #0A5A54 100%);
   color: #fff;
   border-radius: var(--radius);
   padding: 40px 28px;
@@ -362,7 +476,7 @@ input[type=number]:focus, select:focus, textarea:focus {
   width: 160px;
   height: 160px;
   border-radius: 50%;
-  background: rgba(249, 168, 37, 0.18);
+  background: rgba(232, 115, 74, 0.25);
   bottom: -60px;
   left: -40px;
 }
@@ -403,7 +517,7 @@ input[type=number]:focus, select:focus, textarea:focus {
   height: 40px;
   border-radius: 50%;
   background: var(--color-primary);
-  color: #fff;
+  color: var(--on-primary);
   font-weight: 800;
   display: grid;
   place-items: center;
@@ -453,16 +567,17 @@ input[type=number]:focus, select:focus, textarea:focus {
 .feature-card h3 { margin-bottom: .3em; font-size: 1.05rem; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .feature-card p { margin: 0; color: var(--color-muted); font-size: .92rem; }
 
-.soon-badge {
+.soon-badge, .live-badge {
   display: inline-block;
-  background: var(--color-primary-light);
-  color: var(--color-primary-dark);
   font-size: .68rem;
   font-weight: 700;
   padding: 2px 8px;
   border-radius: 999px;
   vertical-align: middle;
 }
+
+.soon-badge { background: var(--color-plum-light); color: var(--color-plum); }
+.live-badge { background: var(--color-primary-light); color: var(--color-primary-dark); }
 
 .compare-table-wrap { overflow-x: auto; margin-bottom: 20px; }
 
@@ -473,7 +588,7 @@ input[type=number]:focus, select:focus, textarea:focus {
 .compare-table th { background: var(--color-primary-light); color: var(--color-primary-dark); font-weight: 700; }
 .compare-table td.yes { color: var(--color-primary-dark); font-weight: 700; }
 .compare-table td.locked { color: var(--color-muted); }
-.compare-table td.soon { color: var(--color-accent-dark); font-weight: 600; }
+.compare-table td.soon { color: var(--color-plum); font-weight: 600; }
 
 .trust-row {
   display: grid;
@@ -549,3 +664,67 @@ input[type=number]:focus, select:focus, textarea:focus {
 .plate-pct-90 .plate-fill { background: conic-gradient(var(--color-primary) 0 90%, transparent 90% 100%); border-color: transparent; }
 .plate-pct-95 .plate-fill { background: conic-gradient(var(--color-primary) 0 95%, transparent 95% 100%); border-color: transparent; }
 .plate-pct-100 .plate-fill { background: conic-gradient(var(--color-primary) 0 100%, transparent 100% 100%); border-color: transparent; }
+
+/* -- Scroll-reveal (progressive enhancement — content is visible either way) -- */
+
+.reveal { opacity: 0; transform: translateY(16px); transition: opacity 480ms ease, transform 480ms ease; }
+.reveal.is-visible { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+}
+
+/* JS-disabled fallback: without app.js, no element ever gains .is-visible,
+   so content must not stay invisible forever. */
+.no-js .reveal { opacity: 1; transform: none; }
+
+/* -- Toast notifications --------------------------------------------------- */
+
+.toast-stack {
+  position: fixed;
+  top: 76px;
+  right: 16px;
+  left: 16px;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+
+@media (min-width: 560px) {
+  .toast-stack { left: auto; width: 360px; }
+}
+
+.toast-stack .alert {
+  pointer-events: auto;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  animation: toast-in 220ms ease;
+}
+
+.toast-close {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  color: inherit;
+  opacity: .6;
+  padding: 0 0 0 8px;
+  flex-shrink: 0;
+}
+
+.toast-close:hover { opacity: 1; }
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* -- Live food search -------------------------------------------------- */
+
+.search-status { color: var(--color-muted); font-size: .85rem; margin: 8px 0 0; min-height: 1.2em; }

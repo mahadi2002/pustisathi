@@ -13,6 +13,9 @@ use App\Core\Response;
  * Free-tier food lookup: name + macros only, capped per day for guests.
  * An active subscriber searches without limit — the cap exists to keep the
  * free surface useful for SEO/trust without giving away the whole database.
+ * Answers either a full page (normal navigation) or JSON (the live-search
+ * JS on the page fetches this same URL with an Accept: application/json
+ * header instead of reloading).
  */
 final class FoodController extends Controller
 {
@@ -38,6 +41,14 @@ final class FoodController extends Controller
                     [$like, $like]
                 );
             }
+        }
+
+        if ($request->wantsJson()) {
+            return $this->json([
+                'query'   => $query,
+                'results' => $results,
+                'capped'  => $capped,
+            ]);
         }
 
         return $this->view('public/foods', [

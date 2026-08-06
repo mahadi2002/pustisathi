@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="bn">
+<html lang="bn" class="no-js">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -18,6 +18,7 @@
         <button type="submit" class="link-button">Logout</button>
       </form>
     </nav>
+    <?= \App\Core\View::partial('partials/theme-toggle-button') ?>
   </div>
 </header>
 

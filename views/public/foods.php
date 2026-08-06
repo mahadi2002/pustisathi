@@ -4,13 +4,15 @@
   <h1>খাবারের পুষ্টিমান খুঁজুন</h1>
   <p>নাম লিখে যেকোনো খাবারের প্রতি ১০০ গ্রামে ক্যালরি ও Macro দেখুন। Guest হিসেবে দিনে <?= e((string) config('app.foods.search_daily_cap_guest', 10)) ?> বার পর্যন্ত খুঁজতে পারবেন — Subscriber দের জন্য কোনো সীমা নেই।</p>
 
-  <form method="get" action="/foods" class="field food-search-form">
+  <form method="get" action="/foods" id="food-search-form" class="field food-search-form">
     <label for="q" class="sr-only">খাবারের নাম</label>
-    <input type="text" id="q" name="q" placeholder="যেমন: ভাত, ডিম, পালং শাক..." value="<?= e($query) ?>" autofocus>
+    <input type="text" id="q" name="q" placeholder="যেমন: ভাত, ডিম, পালং শাক..." value="<?= e($query) ?>" autofocus autocomplete="off">
     <button type="submit" class="btn">খুঁজুন</button>
   </form>
+  <p class="search-status" id="food-search-status"></p>
 </section>
 
+<div id="food-results">
 <?php if ($capped): ?>
   <div class="alert alert-info">
     আজকের জন্য Free খোঁজার সীমা শেষ হয়ে গেছে।
@@ -45,6 +47,7 @@
   </div>
   <p class="text-muted section-note">মান প্রতি ১০০ গ্রামে, আনুমানিক — যাচাইকৃত তথ্যভাণ্ডার আসার আগ পর্যন্ত রেফারেন্স হিসেবে ব্যবহার করুন।</p>
 <?php endif; ?>
+</div>
 
 <section class="card">
   <h2>সম্পূর্ণ Diet Plan চান?</h2>
