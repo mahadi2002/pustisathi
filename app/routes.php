@@ -36,6 +36,9 @@ return [
     // -- Nutritionist (approval + billing gated by RequireNutritionist) ---
     ['GET',  '/nutri', 'NutriController@home', ['nutri']],
 
+    // -- Admin (gated by RequireAdmin; no subscription needed) ------------
+    ['GET',  '/admin', 'AdminController@home', ['admin']],
+
     // -- Gated patient app --------------------------------------------------
     ['GET',  '/app/onboarding',      'OnboardingController@form',     ['auth', 'sub']],
     ['POST', '/app/onboarding',      'OnboardingController@store',    ['auth', 'sub', 'csrf']],

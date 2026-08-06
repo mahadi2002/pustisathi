@@ -530,11 +530,9 @@ input[type=number]:focus, select:focus, textarea:focus {
 /* -- Landing page ------------------------------------------------------- */
 
 .hero {
-  /* A fixed brand gradient rather than the theme-adaptive primary — dark
-     mode's primary lightens for contrast against a dark page background,
-     which would fight with the white text this band always needs. A faint
-     dot-grid rides on top for texture; both gradient stops were verified
-     against white text by direct contrast-ratio calculation (5.5:1+). */
+  /* A faint dot-grid rides on top of the brand gradient for texture; both
+     gradient stops were verified against white text by direct contrast-
+     ratio calculation (5.5:1+). */
   background:
     radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.10) 1px, transparent 0) 0 0 / 18px 18px,
     linear-gradient(135deg, #0E7490 0%, #155E75 100%);

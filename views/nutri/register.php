@@ -39,6 +39,7 @@
 
     <form method="post" action="/nutri/register/otp" class="field">
       <?= csrf_field() ?>
+      <?= \App\Core\View::partial('partials/honeypot-fields') ?>
       <input type="hidden" name="mobile" value="<?= e((string) $mobile) ?>">
       <input type="hidden" name="credentials" value="<?= e((string) $credentials) ?>">
       <button type="submit" class="btn btn-outline btn-block">কোড আবার পাঠান</button>

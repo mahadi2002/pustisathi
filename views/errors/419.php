@@ -2,5 +2,6 @@
 <section class="error-page">
     <h1>⏱️ Session-এর মেয়াদ শেষ</h1>
     <p><?= e($message ?: 'আবার চেষ্টা করুন।') ?></p>
-    <a class="btn" href="javascript:history.back()">পেছনে যান</a>
+    <button type="button" class="btn" id="go-back-btn">পেছনে যান</button>
+    <noscript><a class="btn" href="/">হোমে ফিরে যান</a></noscript>
 </section>

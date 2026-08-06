@@ -18,6 +18,7 @@
 
     <form method="post" action="/subscribe/otp" class="field">
       <?= csrf_field() ?>
+      <?= \App\Core\View::partial('partials/honeypot-fields') ?>
       <input type="hidden" name="mobile" value="<?= e((string) $mobile) ?>">
       <input type="hidden" name="next" value="<?= e($next) ?>">
       <button type="submit" class="btn btn-outline btn-block">কোড আবার পাঠান</button>

@@ -5,6 +5,19 @@
 document.documentElement.classList.remove('no-js');
 document.documentElement.classList.add('js');
 
+/* 419 (session expired) page's "Go back" button — was a javascript: href,
+   which the strict CSP here (script-src 'self', no unsafe-inline) blocks
+   from ever firing since that scheme is script execution, not navigation. */
+(function () {
+  var btn = document.getElementById('go-back-btn');
+  if (!btn) {
+    return;
+  }
+  btn.addEventListener('click', function () {
+    history.back();
+  });
+})();
+
 /* Mobile nav toggle — plain show/hide, no framework needed for one menu. */
 (function () {
   var toggle = document.getElementById('nav-toggle');
