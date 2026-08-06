@@ -1,24 +1,25 @@
-/* PustiSathi — "সুষম থালা" (Balanced Plate) design system: a richer,
-   more saturated jade + mango-orange pairing with a violet tertiary accent
-   for highlights. Light theme by default, following system preference for
-   dark, with a manual toggle (data-theme on <html>) that overrides both.
-   No inline styles anywhere (CSP: style-src 'self'); dynamic percentages
-   use the .w-pct-N utility classes generated below instead of style="width:". */
+/* PustiSathi — a fresh clinical design system: sea-blue primary (trust,
+   health) with an amber accent for calls to action and a soft green
+   tertiary for highlights. Light theme by default, following system
+   preference for dark, with a manual toggle (data-theme on <html>) that
+   overrides both. No inline styles anywhere (CSP: style-src 'self');
+   dynamic percentages use the .w-pct-N utility classes generated below
+   instead of style="width:". */
 
 :root {
-  --color-primary: #0F766E;
-  --color-primary-dark: #115E59;
-  --color-primary-light: #D7F3EF;
+  --color-primary: #0E7490;
+  --color-primary-dark: #155E75;
+  --color-primary-light: #D2EEF3;
   /* Text color for anything sitting on the --color-primary-light tint
      specifically (badges, table headers) — kept separate from
      --color-primary-dark because the pairing that reads well against a
      tinted background isn't always the same pairing that reads well
      against plain surface/bg, and that split flips between themes. */
-  --color-primary-on-tint: #0B4F4A;
-  --color-accent: #F97316;
-  --color-accent-dark: #EA580C;
-  --color-plum: #7C3AED;
-  --color-plum-light: #EDE7FB;
+  --color-primary-on-tint: #0A4A5C;
+  --color-accent: #F59E0B;
+  --color-accent-dark: #D97706;
+  --color-tertiary: #0F6B32;
+  --color-tertiary-light: #DFF3E6;
   --color-alert: #DC2626;
   --color-bg: #F7F9F8;
   --color-surface: #FFFFFF;
@@ -57,14 +58,14 @@
    selector, since that nesting form is too new to rely on everywhere. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --color-primary: #2DD4BF;
-    --color-primary-dark: #14B8A6;
-    --color-primary-light: #123D38;
-    --color-primary-on-tint: #2DD4BF;
-    --color-accent: #FB923C;
-    --color-accent-dark: #F97316;
-    --color-plum: #A78BFA;
-    --color-plum-light: #271F45;
+    --color-primary: #22D3EE;
+    --color-primary-dark: #06B6D4;
+    --color-primary-light: #103A45;
+    --color-primary-on-tint: #22D3EE;
+    --color-accent: #FBBF24;
+    --color-accent-dark: #F59E0B;
+    --color-tertiary: #4ADE80;
+    --color-tertiary-light: #14301F;
     --color-alert: #EF9A9A;
     --color-bg: #101615;
     --color-surface: #1A2321;
@@ -92,14 +93,14 @@
 
 /* Explicit dark pick always wins, system preference or not. */
 :root[data-theme="dark"] {
-  --color-primary: #2DD4BF;
-  --color-primary-dark: #14B8A6;
-  --color-primary-light: #123D38;
-  --color-primary-on-tint: #2DD4BF;
-  --color-accent: #FB923C;
-  --color-accent-dark: #F97316;
-  --color-plum: #A78BFA;
-  --color-plum-light: #271F45;
+  --color-primary: #22D3EE;
+  --color-primary-dark: #06B6D4;
+  --color-primary-light: #103A45;
+  --color-primary-on-tint: #22D3EE;
+  --color-accent: #FBBF24;
+  --color-accent-dark: #F59E0B;
+  --color-tertiary: #4ADE80;
+  --color-tertiary-light: #14301F;
   --color-alert: #EF9A9A;
   --color-bg: #101615;
   --color-surface: #1A2321;
@@ -197,8 +198,8 @@ a:hover { color: var(--color-primary-dark); }
 }
 
 .brand-mark {
-  width: 34px;
-  height: 34px;
+  width: 30px;
+  height: 30px;
   flex-shrink: 0;
 }
 
@@ -503,7 +504,7 @@ input[type=number]:focus, select:focus, textarea:focus {
 .macro-bar-fill { height: 100%; border-radius: 999px; transition: width 480ms ease; }
 .macro-bar-fill.protein { background: var(--color-primary); }
 .macro-bar-fill.carb { background: var(--color-accent); }
-.macro-bar-fill.fat { background: var(--color-plum); }
+.macro-bar-fill.fat { background: var(--color-tertiary); }
 
 /* -- Dashboard: condition tips, subscription status, profile summary ---- */
 
@@ -581,7 +582,7 @@ input[type=number]:focus, select:focus, textarea:focus {
      against white text by direct contrast-ratio calculation (5.5:1+). */
   background:
     radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.10) 1px, transparent 0) 0 0 / 18px 18px,
-    linear-gradient(135deg, #0F766E 0%, #115E59 100%);
+    linear-gradient(135deg, #0E7490 0%, #155E75 100%);
   color: #fff;
   border-radius: var(--radius-lg);
   padding: 40px 28px;
@@ -608,7 +609,7 @@ input[type=number]:focus, select:focus, textarea:focus {
   width: 180px;
   height: 180px;
   border-radius: 50%;
-  background: rgba(249, 115, 22, 0.30);
+  background: rgba(245, 158, 11, 0.30);
   bottom: -70px;
   left: -40px;
 }
@@ -712,7 +713,7 @@ input[type=number]:focus, select:focus, textarea:focus {
   vertical-align: middle;
 }
 
-.soon-badge { background: var(--color-plum-light); color: var(--color-plum); }
+.soon-badge { background: var(--color-tertiary-light); color: var(--color-tertiary); }
 .live-badge { background: var(--color-primary-light); color: var(--color-primary-on-tint); }
 
 .compare-table-wrap { overflow-x: auto; margin-bottom: 20px; }
@@ -724,7 +725,7 @@ input[type=number]:focus, select:focus, textarea:focus {
 .compare-table th { background: var(--color-primary-light); color: var(--color-primary-on-tint); font-weight: 700; }
 .compare-table td.yes { color: var(--color-primary-dark); font-weight: 700; }
 .compare-table td.locked { color: var(--color-muted); }
-.compare-table td.soon { color: var(--color-plum); font-weight: 600; }
+.compare-table td.soon { color: var(--color-tertiary); font-weight: 600; }
 
 .trust-row {
   display: grid;
