@@ -1,32 +1,32 @@
-/* PustiSathi — "উষ্ণ থালা" (Warm Plate) design system: deep teal + coral,
-   a plum accent for tertiary highlights. Light theme by default, following
-   system preference for dark, with a manual toggle (data-theme on <html>)
-   that overrides both. No inline styles anywhere (CSP: style-src 'self');
-   dynamic percentages use the .w-pct-N utility classes generated below
-   instead of style="width:". */
+/* PustiSathi — "সুষম থালা" (Balanced Plate) design system: a richer,
+   more saturated jade + mango-orange pairing with a violet tertiary accent
+   for highlights. Light theme by default, following system preference for
+   dark, with a manual toggle (data-theme on <html>) that overrides both.
+   No inline styles anywhere (CSP: style-src 'self'); dynamic percentages
+   use the .w-pct-N utility classes generated below instead of style="width:". */
 
 :root {
-  --color-primary: #0E7C74;
-  --color-primary-dark: #0A5A54;
-  --color-primary-light: #E1F2F0;
+  --color-primary: #0F766E;
+  --color-primary-dark: #115E59;
+  --color-primary-light: #D7F3EF;
   /* Text color for anything sitting on the --color-primary-light tint
      specifically (badges, table headers) — kept separate from
      --color-primary-dark because the pairing that reads well against a
      tinted background isn't always the same pairing that reads well
      against plain surface/bg, and that split flips between themes. */
-  --color-primary-on-tint: #0A5A54;
-  --color-accent: #E8734A;
-  --color-accent-dark: #C8582F;
-  --color-plum: #7A4C8A;
-  --color-plum-light: #F1E7F4;
-  --color-alert: #C62828;
+  --color-primary-on-tint: #0B4F4A;
+  --color-accent: #F97316;
+  --color-accent-dark: #EA580C;
+  --color-plum: #7C3AED;
+  --color-plum-light: #EDE7FB;
+  --color-alert: #DC2626;
   --color-bg: #F7F9F8;
   --color-surface: #FFFFFF;
   --color-text: #1A2624;
   --color-muted: #5C6E6A;
   --color-border: #E1E8E6;
-  /* Dark, not white — the accent is a mid-tone coral, and white text on it
-     fails contrast at the lighter end of what used to be a gradient. */
+  /* Dark, not white — the accent is a mid-tone orange, and white text on it
+     fails contrast at the lighter end of a gradient. */
   --on-accent: #221208;
   --on-primary: #FFFFFF;
 
@@ -57,14 +57,14 @@
    selector, since that nesting form is too new to rely on everywhere. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --color-primary: #4DBDB3;
-    --color-primary-dark: #3A9C93;
-    --color-primary-light: #163330;
-    --color-primary-on-tint: #4DBDB3;
-    --color-accent: #F2946D;
-    --color-accent-dark: #D97A50;
-    --color-plum: #B58BC7;
-    --color-plum-light: #2E2438;
+    --color-primary: #2DD4BF;
+    --color-primary-dark: #14B8A6;
+    --color-primary-light: #123D38;
+    --color-primary-on-tint: #2DD4BF;
+    --color-accent: #FB923C;
+    --color-accent-dark: #F97316;
+    --color-plum: #A78BFA;
+    --color-plum-light: #271F45;
     --color-alert: #EF9A9A;
     --color-bg: #101615;
     --color-surface: #1A2321;
@@ -92,14 +92,14 @@
 
 /* Explicit dark pick always wins, system preference or not. */
 :root[data-theme="dark"] {
-  --color-primary: #4DBDB3;
-  --color-primary-dark: #3A9C93;
-  --color-primary-light: #163330;
-  --color-primary-on-tint: #4DBDB3;
-  --color-accent: #F2946D;
-  --color-accent-dark: #D97A50;
-  --color-plum: #B58BC7;
-  --color-plum-light: #2E2438;
+  --color-primary: #2DD4BF;
+  --color-primary-dark: #14B8A6;
+  --color-primary-light: #123D38;
+  --color-primary-on-tint: #2DD4BF;
+  --color-accent: #FB923C;
+  --color-accent-dark: #F97316;
+  --color-plum: #A78BFA;
+  --color-plum-light: #271F45;
   --color-alert: #EF9A9A;
   --color-bg: #101615;
   --color-surface: #1A2321;
@@ -107,6 +107,7 @@
   --color-muted: #93A6A1;
   --color-border: #2A3634;
   --on-accent: #221208;
+  --on-primary: #0A1F1D;
 
   --color-success-bg: #163330;
   --color-success-text: #7BD9CD;
@@ -196,15 +197,15 @@ a:hover { color: var(--color-primary-dark); }
 }
 
 .brand-mark {
-  width: 30px;
-  height: 30px;
+  width: 34px;
+  height: 34px;
   flex-shrink: 0;
 }
 
 .price-pill {
   display: inline-flex;
   align-items: center;
-  background: var(--color-accent);
+  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-dark) 100%);
   color: var(--on-accent);
   font-weight: 700;
   padding: 7px 14px;
@@ -342,7 +343,11 @@ a:hover { color: var(--color-primary-dark); }
 
 .btn {
   display: inline-block;
-  background: var(--color-primary);
+  /* Gradients run within one hue family only (primary->primary-dark here,
+     accent->accent-dark below) so contrast with a single text color stays
+     monotonic across the whole gradient — verified by direct contrast-ratio
+     calculation at both stops before this was added. */
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
   color: var(--on-primary);
   border: none;
   padding: 13px 24px;
@@ -353,16 +358,13 @@ a:hover { color: var(--color-primary-dark); }
   cursor: pointer;
   text-align: center;
   box-shadow: var(--shadow-sm);
-  transition: transform var(--transition), box-shadow var(--transition), background var(--transition);
+  transition: transform var(--transition), box-shadow var(--transition), filter var(--transition);
 }
 
-.btn:hover { background: var(--color-primary-dark); transform: translateY(-1px); box-shadow: var(--shadow-md); color: var(--on-primary); }
+.btn:hover { filter: brightness(1.08); transform: translateY(-1px); box-shadow: var(--shadow-md); color: var(--on-primary); }
 .btn:active { transform: translateY(0); }
-/* Solid, not a gradient to accent-dark — that gradient's darker end failed
-   contrast with either text color, since the two ends need opposite text
-   colors to read well (confirmed by direct contrast-ratio calculation). */
-.btn-accent { background: var(--color-accent); color: var(--on-accent); }
-.btn-accent:hover { color: var(--on-accent); }
+.btn-accent { background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-dark) 100%); color: var(--on-accent); }
+.btn-accent:hover { color: var(--on-accent); filter: brightness(1.08); }
 .btn-outline { background: var(--color-surface); color: var(--color-primary); border: 2px solid var(--color-primary); box-shadow: none; }
 .btn-outline:hover { background: var(--color-primary-light); color: var(--color-primary-dark); }
 .btn-block { display: block; width: 100%; }
@@ -574,14 +576,19 @@ input[type=number]:focus, select:focus, textarea:focus {
 .hero {
   /* A fixed brand gradient rather than the theme-adaptive primary — dark
      mode's primary lightens for contrast against a dark page background,
-     which would fight with the white text this band always needs. */
-  background: linear-gradient(135deg, #0E7C74 0%, #0A5A54 100%);
+     which would fight with the white text this band always needs. A faint
+     dot-grid rides on top for texture; both gradient stops were verified
+     against white text by direct contrast-ratio calculation (5.5:1+). */
+  background:
+    radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.10) 1px, transparent 0) 0 0 / 18px 18px,
+    linear-gradient(135deg, #0F766E 0%, #115E59 100%);
   color: #fff;
-  border-radius: var(--radius);
+  border-radius: var(--radius-lg);
   padding: 40px 28px;
   margin-bottom: 20px;
   position: relative;
   overflow: hidden;
+  box-shadow: var(--shadow-lg);
 }
 
 .hero::before {
@@ -590,7 +597,7 @@ input[type=number]:focus, select:focus, textarea:focus {
   width: 260px;
   height: 260px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.09);
   top: -80px;
   right: -80px;
 }
@@ -598,11 +605,11 @@ input[type=number]:focus, select:focus, textarea:focus {
 .hero::after {
   content: "";
   position: absolute;
-  width: 160px;
-  height: 160px;
+  width: 180px;
+  height: 180px;
   border-radius: 50%;
-  background: rgba(232, 115, 74, 0.25);
-  bottom: -60px;
+  background: rgba(249, 115, 22, 0.30);
+  bottom: -70px;
   left: -40px;
 }
 
@@ -643,12 +650,13 @@ input[type=number]:focus, select:focus, textarea:focus {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: var(--color-primary);
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
   color: var(--on-primary);
   font-weight: 800;
   display: grid;
   place-items: center;
   margin: 0 auto 10px;
+  box-shadow: var(--shadow-sm);
 }
 
 .feature-grid {
@@ -681,13 +689,14 @@ input[type=number]:focus, select:focus, textarea:focus {
 .feature-card.is-soon { opacity: .8; }
 
 .feature-icon-badge {
-  width: 44px;
-  height: 44px;
-  border-radius: var(--radius-sm);
-  background: var(--color-primary-light);
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-surface) 100%);
+  box-shadow: inset 0 0 0 1px var(--color-border);
   display: grid;
   place-items: center;
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   margin-bottom: 10px;
 }
 

@@ -9,7 +9,10 @@
 <body>
 <header class="site-header">
   <div class="container">
-    <a class="brand" href="/app/dashboard">পুষ্টিসাথী</a>
+    <a class="brand" href="/app/dashboard">
+      <?= \App\Core\View::partial('partials/brand-mark') ?>
+      পুষ্টিসাথী
+    </a>
     <nav class="nav-links">
       <a href="/app/dashboard">Dashboard</a>
       <a href="/app/plan">Plan</a>
