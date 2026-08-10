@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-/** SubscriptionGateway selection + DCB DCB settings. `driver` picks MockGateway vs DcbGateway in GatewayFactory. */
+/** SubscriptionGateway selection + Direct Carrier Billing (DCB) settings. `driver` picks MockGateway vs DcbGateway in GatewayFactory. */
 return [
     'driver' => env('SUBSCRIPTION_GATEWAY', 'mock'), // mock | dcb
     'amount' => (float) env('SUBSCRIPTION_PRICE_BDT', 2.78),

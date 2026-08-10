@@ -4,8 +4,8 @@ Bangla nutrition app: a free BMI/calorie estimate, then a personalized
 daily diet plan matched to body profile, budget, and local food
 availability — plus a patient↔nutritionist matching and messaging loop for
 people who want an actual professional involved. Gated behind a ৳2.78/day
-DCB micro-subscription for Robi & Airtel users, mobile+OTP only, no
-passwords. Third app in this workspace's series (after GardenBondhu,
+direct-carrier-billing micro-subscription for Robi & Airtel users,
+mobile+OTP only, no passwords. Third app in this workspace's series (after GardenBondhu,
 IELTS Master BD) — same architecture, re-skinned.
 
 ## Stack
@@ -49,8 +49,8 @@ root shutdown` if you want it down too.
 
 The billing gateway defaults to a mock implementation (`SUBSCRIPTION_GATEWAY=mock`
 in `.env`), and OTP login accepts the fixed dev code `123456` for any
-number when `APP_ENV=local` — no real DCB credentials or SMS delivery
-needed to test the app end to end. Demo accounts from the seed:
+number when `APP_ENV=local` — no real carrier-billing credentials or SMS
+delivery needed to test the app end to end. Demo accounts from the seed:
 
 - Admin: mobile `01899999999`, OTP `123456` — no subscription required.
 - Nutritionist: mobile `01812345678`, OTP `123456`.

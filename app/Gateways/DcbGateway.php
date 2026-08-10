@@ -6,9 +6,9 @@ namespace App\Gateways;
 use App\Exceptions\GatewayNotConfiguredException;
 
 /**
- * Prod stub — wired but unusable until real DCB DCB credentials are
- * issued. Throws until every DCB_* key in .env is present, and never
- * falls back to MockGateway on its own.
+ * Prod stub — wired but unusable until real direct-carrier-billing (DCB)
+ * credentials are issued. Throws until every DCB_* key in .env is present,
+ * and never falls back to MockGateway on its own.
  */
 final class DcbGateway implements SubscriptionGateway
 {

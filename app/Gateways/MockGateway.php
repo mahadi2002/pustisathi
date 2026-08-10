@@ -56,7 +56,7 @@ final class MockGateway implements SubscriptionGateway
         return new SubscriptionStatus($row['status'], $row['next_charge_at']);
     }
 
-    /** Mirrors what a real DCB webhook payload would trigger, for local testing without one. */
+    /** Mirrors what a real carrier-billing webhook payload would trigger, for local testing without one. */
     public function handleWebhook(array $payload): WebhookResult
     {
         $subscriptionId = (int) ($payload['subscription_id'] ?? 0);
