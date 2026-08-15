@@ -39,8 +39,8 @@ final class OtpService
         $ttl    = (int) config('app.otp.ttl', 300);
 
         Db::insert(
-            'INSERT INTO otp_requests (mobile, otp_hash, expires_at) VALUES (?, ?, DATE_ADD(NOW(), INTERVAL ? SECOND))',
-            [$mobile, password_hash($otp, PASSWORD_DEFAULT), $ttl]
+            'INSERT INTO otp_requests (mobile_hash, otp_hash, expires_at) VALUES (?, ?, DATE_ADD(NOW(), INTERVAL ? SECOND))',
+            [Crypto::blindIndex('mobile:' . $mobile), password_hash($otp, PASSWORD_DEFAULT), $ttl]
         );
 
         // Dev-only channel — a real gateway would never hand us the plaintext code to log.
@@ -54,9 +54,9 @@ final class OtpService
 
         $row = Db::first(
             'SELECT id, otp_hash, attempt_count FROM otp_requests
-             WHERE mobile = ? AND consumed_at IS NULL AND expires_at > NOW()
+             WHERE mobile_hash = ? AND consumed_at IS NULL AND expires_at > NOW()
              ORDER BY id DESC LIMIT 1',
-            [$mobile]
+            [Crypto::blindIndex('mobile:' . $mobile)]
         );
 
         if ($row === null) {

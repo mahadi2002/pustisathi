@@ -39,9 +39,7 @@ final class SubscribeController extends Controller
         ], ['mobile' => 'মোবাইল নম্বর']);
 
         if ($v->fails()) {
-            $v->flash();
-            Session::notify('error', $v->firstError() ?? 'সঠিক নম্বর দিন।');
-            return $this->redirect('/subscribe');
+            return $this->failValidation($v, '/subscribe', 'সঠিক নম্বর দিন।', flash: true);
         }
 
         $mobile = $v->get('mobile');
@@ -71,8 +69,7 @@ final class SubscribeController extends Controller
         ], ['otp' => 'কোড']);
 
         if ($v->fails()) {
-            Session::notify('error', $v->firstError() ?? 'সঠিক কোড দিন।');
-            return $this->redirect('/subscribe');
+            return $this->failValidation($v, '/subscribe', 'সঠিক কোড দিন।');
         }
 
         $result = GatewayFactory::make()->verifyOtp($mobile, $v->get('otp'));
@@ -87,7 +84,16 @@ final class SubscribeController extends Controller
         Session::login($result->userId);
 
         $user = (new UserRepo())->find($result->userId);
-        $role = $user['role'] ?? 'patient';
+        if ($user === null) {
+            // The gateway verified a real account, but it's gone (soft-deleted)
+            // or otherwise unresolvable — don't let a live session through
+            // under a role guess.
+            Session::revokeAllForUser($result->userId);
+            Session::destroy_all();
+            Session::notify('error', 'অ্যাকাউন্ট পাওয়া যায়নি। আবার চেষ্টা করুন।');
+            return $this->redirect('/subscribe');
+        }
+        $role = $user['role'];
 
         if ($role === 'admin') {
             Session::notify('success', 'স্বাগতম!');

@@ -20,6 +20,10 @@ final class RateLimiter implements Middleware
     {
         return match ($bucket) {
             'otp_request'  => [(int) env('OTP_RATE_LIMIT_PER_HOUR', 3), 3600],
+            // Same window as OtpService's own per-code attempt cap — this is
+            // the IP-level backstop against guessing across many pending
+            // codes, not a replacement for that per-code lock.
+            'otp_verify'   => [(int) env('OTP_MAX_ATTEMPTS', 5), 3600],
             'admin_login'  => [5, 900],
             'foods_search' => [(int) env('FOODS_SEARCH_DAILY_CAP_GUEST', 10), 86400],
             default        => [30, 60],

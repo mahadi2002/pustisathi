@@ -34,6 +34,19 @@ abstract class Controller
         return Response::json($data, $status);
     }
 
+    /**
+     * The validate-fail-then-flash-notify-redirect dance every form controller
+     * needs, in one place instead of five near-identical copies.
+     */
+    protected function failValidation(Validator $v, string $redirectTo, string $default, bool $flash = false): Response
+    {
+        if ($flash) {
+            $v->flash();
+        }
+        Session::notify('error', $v->firstError() ?? $default);
+        return $this->redirect($redirectTo);
+    }
+
     /** IDOR and missing rows both end here — never confirm existence either way. */
     protected function notFound(): never
     {

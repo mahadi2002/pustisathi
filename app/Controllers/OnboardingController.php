@@ -54,9 +54,7 @@ final class OnboardingController extends Controller
         ]);
 
         if ($v->fails()) {
-            $v->flash();
-            Session::notify('error', $v->firstError() ?? 'সঠিকভাবে ফর্মটি পূরণ করুন।');
-            return $this->redirect('/app/onboarding');
+            return $this->failValidation($v, '/app/onboarding', 'সঠিকভাবে ফর্মটি পূরণ করুন।', flash: true);
         }
 
         $selectedFlags = array_values(array_intersect($request->arr('medical_flags'), self::CONDITION_CODES));

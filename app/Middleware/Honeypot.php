@@ -30,9 +30,25 @@ final class Honeypot implements Middleware
         $renderedAt = $request->int('hp_ts', 0);
         if ($renderedAt <= 0 || (time() - $renderedAt) < self::MIN_FILL_SECONDS) {
             Session::notify('error', 'একটু ধীরে আবার চেষ্টা করুন।');
-            return Response::redirect($request->header('referer', '/') ?? '/');
+            return Response::redirect($this->safeReferer($request));
         }
 
         return $next();
+    }
+
+    /**
+     * The Referer header is fully attacker-controlled on any non-browser
+     * POST, so redirecting to it unchecked is an open redirect — only trust
+     * it when it actually points back at this app.
+     */
+    private function safeReferer(Request $request): string
+    {
+        $referer = (string) ($request->header('referer', '') ?? '');
+        $host    = parse_url((string) config('app.url'), PHP_URL_HOST);
+
+        if ($referer !== '' && parse_url($referer, PHP_URL_HOST) === $host) {
+            return $referer;
+        }
+        return '/';
     }
 }

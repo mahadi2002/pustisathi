@@ -65,6 +65,13 @@ final class UserRepo
         $existing = $this->findByMobile($mobile);
 
         if ($existing !== null) {
+            // Never touch an admin account through this public form — role is
+            // an upgrade path for patients, not a way to reassign any account
+            // that happens to share a mobile number.
+            if ($existing['role'] === 'admin') {
+                return [(int) $existing['id'], false];
+            }
+
             $status = in_array($existing['nutritionist_status'], ['approved', 'pending'], true)
                 ? $existing['nutritionist_status']
                 : 'pending';

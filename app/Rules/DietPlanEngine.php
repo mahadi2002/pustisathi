@@ -246,7 +246,19 @@ final class DietPlanEngine
                 return $a['id'] <=> $b['id'];
             });
 
-            $food        = $pool[0];
+            $food = $pool[0];
+            if ($requiredTags !== [] && array_intersect($food['tags_decoded'], $requiredTags) === []) {
+                // The sort above puts any required-tag match first, so if the
+                // winner has none, nothing in this slot's pool did either —
+                // the condition's nutrient requirement went unmet here. The
+                // plan still gets built (no food in stock beats no plan at
+                // all), but this can't be allowed to vanish silently.
+                \App\Core\Logger::warning('diet_plan.required_tag_unmet', [
+                    'slot'          => $slot,
+                    'categories'    => $entry['categories'],
+                    'required_tags' => $requiredTags,
+                ]);
+            }
             $usedIds[]   = (int) $food['id'];
             $kcalForItem = $mealKcal * $entry['share'];
             $kcalPer100g = max(0.1, (float) $food['per_100g_kcal']);
@@ -294,13 +306,20 @@ final class DietPlanEngine
                 ]
             );
 
+            $placeholders = [];
+            $params       = [];
             foreach ($meals as $slot => $lines) {
                 foreach ($lines as $line) {
-                    Db::insert(
-                        'INSERT INTO plan_meals (plan_id, meal_slot, food_id, portion_grams, sort_order) VALUES (?, ?, ?, ?, ?)',
-                        [$planId, $slot, $line['food_id'], $line['portion_grams'], $line['sort_order']]
-                    );
+                    $placeholders[] = '(?, ?, ?, ?, ?)';
+                    array_push($params, $planId, $slot, $line['food_id'], $line['portion_grams'], $line['sort_order']);
                 }
+            }
+            if ($placeholders !== []) {
+                Db::exec(
+                    'INSERT INTO plan_meals (plan_id, meal_slot, food_id, portion_grams, sort_order) VALUES '
+                        . implode(', ', $placeholders),
+                    $params
+                );
             }
 
             return $planId;

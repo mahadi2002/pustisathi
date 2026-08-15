@@ -42,9 +42,7 @@ final class NutriRegisterController extends Controller
         ], ['mobile' => 'মোবাইল নম্বর', 'credentials' => 'Credential/License তথ্য']);
 
         if ($v->fails()) {
-            $v->flash();
-            Session::notify('error', $v->firstError() ?? 'সঠিকভাবে ফর্মটি পূরণ করুন।');
-            return $this->redirect('/nutri/register');
+            return $this->failValidation($v, '/nutri/register', 'সঠিকভাবে ফর্মটি পূরণ করুন।', flash: true);
         }
 
         try {
@@ -74,8 +72,7 @@ final class NutriRegisterController extends Controller
         ], ['otp' => 'কোড']);
 
         if ($v->fails()) {
-            Session::notify('error', $v->firstError() ?? 'সঠিক কোড দিন।');
-            return $this->redirect('/nutri/register');
+            return $this->failValidation($v, '/nutri/register', 'সঠিক কোড দিন।');
         }
 
         try {
@@ -88,7 +85,7 @@ final class NutriRegisterController extends Controller
         $operator = MockGateway::detectOperator($mobile);
         [$userId] = (new UserRepo())->findOrCreateNutritionist($mobile, $operator, $credentials);
 
-        SubscriptionService::activate($userId, $operator, 'mock');
+        SubscriptionService::activate($userId, $operator, (string) config('gateway.driver', 'mock'));
 
         Session::forget('nutri_reg_pending_mobile');
         Session::forget('nutri_reg_pending_credentials');
