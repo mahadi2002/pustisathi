@@ -1,17 +1,18 @@
 # Features
 
-## Mobile+OTP is the only auth, for every role
+## Email+password is the only auth, for every role
 
-No email/password anywhere in the app. `/subscribe` is the one screen
-every role signs in through (patients, returning nutritionists, admin) —
-`SubscribeController::verifyOtp()` looks the number up and routes by
-whatever role is already on file, never guessing or creating a new role
-for an existing number. A brand-new nutritionist instead starts at
+`/login` (`LoginController`) is the one screen every role signs in
+through (patients, returning nutritionists, admin) — it looks the email
+up and routes by whatever role is already on file, never guessing or
+creating a new role for an existing account. A brand-new patient starts
+at `/register`; a brand-new nutritionist instead starts at
 `/nutri/register`, which collects a credentials/license text field up
 front and creates the account as `nutritionist`/`pending` — approval is
-never self-service (see below). `OtpService::DEV_CODE` (`123456`) verifies
-against any number only when `SUBSCRIPTION_GATEWAY=mock`, which
-`bootstrap.php` already refuses to run when `APP_ENV=production`.
+never self-service (see below). Both registration flows are explicit
+account creation, not find-or-create-on-first-login. Password reset
+(`/forgot-password` → emailed link → `/reset-password/{token}`) is the
+only account-recovery path — see docs/SECURITY.md for the token handling.
 
 ## Free tier: BMI/BMR calculator + food search
 
@@ -25,38 +26,29 @@ Nothing is sent to the server or stored.
 `name_en`), full page or JSON depending on `Accept` header (the same URL
 backs both the no-JS form and the live-search JS). Guests are capped at
 `FOODS_SEARCH_DAILY_CAP_GUEST` (default 10) searches/day, keyed by IP hash
-(`RateLimit`); an active subscriber (`Controller::isSubscribed()`) has no
-cap.
+(`RateLimit`); anyone logged in (`Controller::isAuthenticated()`), any
+role, has no cap.
 
-## The subscription: ৳2.78/day, no free tier for the diet plan itself
+## No billing — every feature is free behind a login
 
-`subscriptions.status` state machine, driven by `SubscriptionService` and
-the daily `cron/charge_cycle.php`:
+There is no subscription, no billing, no payment gateway anywhere in this
+app; it's a hobby project. The diet plan (`/app/onboarding`, `/app/plan`
+and its regeneration, `/app/dashboard`) sits behind `RequireAuth` only —
+the same "any logged-in role" gate as the rest of `/app/*` — so a patient
+gets full access the moment they register, nothing to activate or pay
+for. Nutritionist access is gated the same way plus one extra check:
+`RequireNutritionist` also requires `nutritionist_status = 'approved'`,
+which only an admin can set (see docs/SECURITY.md's "Role / approval
+gates"). An account that's never approved, or one an admin later
+unapproves, simply can't reach `/nutri*` — there's no lapsed-subscription
+concept to reason about, just "logged in" and, for nutritionists,
+"approved."
 
-```
-pending --(first successful charge)--> active
-active  --(missed charge)------------> grace   (one retry cycle, access stays on)
-grace   --(missed charge again)------> expired (access lost)
-grace   --(charge succeeds)----------> active
-(pending|active|grace) --(user action)--> unsubscribed
-```
-
-There is no `pending`→`failed` retry loop distinct from grace — a
-subscription that never had a first successful charge goes straight to
-`failed` on that first miss (`SubscriptionService::recordChargeFailure()`'s
-`match` — `'active' => 'grace', 'grace' => 'expired', default => 'failed'`).
-`unsubscribe()` deliberately does **not** revoke the session — the account
-and login stay usable (free calculator/food-search browsing, resubscribing
-later); only `RequireSubscription`/`RequireNutritionist`-gated routes lose
-access, on the very next request, since access is always a live DB read
-(see docs/ARCHITECTURE.md).
-
-`MockGateway::verifyOtp()` activates every non-admin account immediately
-on first OTP verification — there's no separate "start subscription"
-action. Nutritionist registration goes through the identical mechanism
-(`NutriRegisterController::verifyOtp()` → `SubscriptionService::activate()`)
-at the same price, gated by the same `RequireNutritionist` middleware that
-also checks `nutritionist_status === 'approved'`.
+(An earlier version of this app billed ৳2.78/day over mobile carrier
+billing, gated by a `subscriptions.status` state machine. That entire
+system — `SubscriptionService`, `MockGateway`/`DcbGateway`,
+`RequireSubscription`, the `subscriptions`/`billing_events` tables — was
+removed; see `database/migrations/017_drop_subscription_billing.sql`.)
 
 ## Diet plan generation (`app/Rules/DietPlanEngine.php`)
 
@@ -109,34 +101,34 @@ docs/DEVELOPMENT.md.
 ## Admin and nutritionist landing pages are real, not dead ends
 
 Both `/admin` and `/nutri` are reached only after their respective
-middleware has already confirmed role (+ approval + subscription, for
-nutritionist). Neither has a CRUD panel yet, but both render live data
-instead of a placeholder: `AdminController::home()` shows counts (patients,
-nutritionists, pending approvals, active subscriptions, food items, diet
-plans generated) pulled with one query; `NutriController::home()` is
-currently just a welcome card (see Known open items — this one really is a
-placeholder, unlike admin's).
+middleware has already confirmed role (+ approval, for nutritionist —
+see docs/SECURITY.md's "Role / approval gates"; there's no subscription
+check anymore). Neither has a full CRUD panel, but both render live data:
+`AdminController::home()` shows counts (patients, nutritionists, pending
+approvals, food items, diet plans generated) pulled with one query;
+`NutriController::home()` shows the nutritionist's own linked-patient
+roster (see the next item — this one is a real feature, not a
+placeholder).
 
 ## Known open items
 
-- **The nutritionist↔patient relationship is entirely unbuilt.** The
-  schema (`nutritionist_patients`, `clinical_notes`, from
-  `008_nutritionist_patient.sql`) exists and migrates cleanly, but **zero
-  application code reads or writes either table** — no repository, no
-  service, no controller action, no route. `views/nutri/home.php` is a
-  literal placeholder card ("Patient Roster ও Plan Editor শীঘ্রই আসছে…") and
-  the home page's feature grid lists "Nutritionist Review" under
-  "শীঘ্রই আসছে" (coming soon), not as a live feature. A nutritionist who
-  registers, gets approved, and pays the subscription today lands on that
-  placeholder with no way to see or do anything patient-related. Whether
-  to build this for real (patient roster, plan override/authoring flow
-  tying into `diet_plans.created_by`/`source = 'nutritionist_authored'`,
-  which the schema and `DietPlanEngine::persist()` already support) or
-  formally drop the dead schema is an open decision — not made in this
-  pass, and this codebase should not be read as "almost done" on this
-  feature. See the `POST /app/plan/regenerate`-adjacent `source` field for
-  the one place the schema already anticipates nutritionist-authored plans
-  without anything populating it that way today.
+- **The nutritionist↔patient relationship is built, in a minimal form.**
+  `nutritionist_patients` and `clinical_notes` (from
+  `008_nutritionist_patient.sql`) went unused for a while, but
+  `NutriController` now reads and writes both: a patient generates an
+  8-character share code from their dashboard
+  (`DashboardController::shareCode()`, stored on
+  `body_profiles.share_code`), hands it to their nutritionist, and the
+  nutritionist enters it at `/nutri` (`NutriController::link()`) to create
+  the link. `/nutri/patients/{id}` (`NutriController::patient()`) shows
+  that patient's profile and a reverse-chronological `clinical_notes`
+  thread; `/nutri/patients/{id}/notes` (`NutriController::addNote()`)
+  appends to it. It's intentionally minimal — no real-time chat, no read
+  receipts, no note-editing, no plan override/authoring flow tying into
+  `diet_plans.created_by`/`source = 'nutritionist_authored'` (which the
+  schema and `DietPlanEngine::persist()` support but nothing populates
+  that way yet) — but "entirely unbuilt" is no longer an accurate
+  description of it.
 - **Messaging is 0% built at every layer.** No table, no controller, no
   route, no view, no mention in the schema at all. If patient↔nutritionist
   communication is wanted, it needs a schema addendum
@@ -145,12 +137,15 @@ placeholder, unlike admin's).
 - **`food_logs` (007) has a schema and no code.** No controller, service,
   or view reads or writes it. The home page's feature grid correctly lists
   "দৈনিক Food Log" under "শীঘ্রই আসছে."
-- **`DcbGateway` (real direct-carrier-billing) is a stub.** Every method
-  throws `GatewayNotConfiguredException` even once all five `DCB_*` env
-  vars are present — the actual SDP/OTP API contract and request/response
-  shapes haven't been integrated. `SUBSCRIPTION_GATEWAY=mock` is what every
-  environment runs today, and `bootstrap.php` hard-blocks it in
-  production.
+- **The old mobile+OTP/carrier-billing system is gone, not stubbed.**
+  An earlier version of this app authenticated via mobile+OTP and billed
+  ৳2.78/day through direct-carrier-billing (`DcbGateway`/`MockGateway`,
+  `SubscriptionService`, `OtpService`). All of it — code, routes,
+  `subscriptions`/`billing_events`/`otp_requests` tables — was removed in
+  favor of plain email+password auth with no billing at all (see
+  `database/migrations/016_email_password_auth.sql` and
+  `017_drop_subscription_billing.sql`). There is nothing left to finish
+  here; this is a completed removal, not an open item.
 - **Food/region data is a seed-only placeholder, not sourced content.**
   35 food items (hand-picked common Bangladeshi foods, reference nutrition
   figures, not from a licensed composition database — `data_source`
@@ -167,6 +162,5 @@ placeholder, unlike admin's).
   but nothing lists past plans or lets a user compare them. Listed
   correctly as "শীঘ্রই আসছে" ("Plan History + PDF Export") on the home
   page.
-- **BTRC operator prefix map unverified** — see docs/DEVELOPMENT.md.
 - **`Repositories/` layer is only partially adopted** — see
   docs/DEVELOPMENT.md's Known gaps.
