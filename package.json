@@ -1,0 +1,14 @@
+{
+  "name": "pustisathi",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Minimal Vite build step for public/assets/css/app.css and public/assets/js/app.js — no framework, no bundling of app logic beyond minification/autoprefixing. Source files are hand-edited directly; this only produces the shipped public/assets/dist/ output.",
+  "scripts": {
+    "build": "vite build",
+    "watch": "vite build --watch"
+  },
+  "devDependencies": {
+    "vite": "^6.3.5"
+  }
+}

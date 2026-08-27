@@ -4,6 +4,14 @@
 -- at its default 'seed_unverified' (see the known-gap note in the build
 -- docs) until a verified composition table replaces this via the admin
 -- CSV import.
+--
+-- MySQL, not Postgres — `ON CONFLICT DO NOTHING` is Postgres/SQLite syntax
+-- and threw a SQL syntax error against this app's mysql: PDO DSN
+-- (App\Core\Db). INSERT IGNORE is the MySQL equivalent; food_items has no
+-- unique key besides its auto-increment id, so this doesn't dedupe rows on
+-- a repeat --seed run any more than the original ON CONFLICT (with no
+-- explicit target) would have against a table with the same lack of a
+-- unique constraint — it just stops the seed from crashing.
 INSERT IGNORE INTO food_items (name_bn, name_en, category, cost_tier, per_100g_kcal, per_100g_protein_g, per_100g_carb_g, per_100g_fat_g, tags) VALUES
 ('সাদা ভাত', 'White rice, cooked', 'grain', 'low', 130.0, 2.7, 28.0, 0.3, '["high_gi"]'),
 ('লাল চালের ভাত', 'Brown rice, cooked', 'grain', 'mid', 123.0, 2.6, 26.0, 1.0, '["low_gi","high_fiber"]'),

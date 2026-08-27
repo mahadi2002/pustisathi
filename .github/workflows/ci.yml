@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: pustisathi
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -proot"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: pdo_mysql, openssl, mbstring, json
+          coverage: none
+
+      - name: Lint every PHP file (php -l)
+        run: |
+          set -e
+          find . -path ./.git -prune -o -name '*.php' -print0 \
+            | xargs -0 -n1 -P4 php -l
+
+      - name: Write .env
+        run: |
+          cp .env.example .env
+          APP_KEY=$(php -r "echo base64_encode(random_bytes(32));")
+          sed -i "s#^APP_KEY=.*#APP_KEY=${APP_KEY}#" .env
+          sed -i "s#^APP_ENV=.*#APP_ENV=local#" .env
+          sed -i "s#^DB_HOST=.*#DB_HOST=127.0.0.1#" .env
+          sed -i "s#^DB_PORT=.*#DB_PORT=3306#" .env
+          sed -i "s#^DB_NAME=.*#DB_NAME=pustisathi#" .env
+          sed -i "s#^DB_USER=.*#DB_USER=root#" .env
+          sed -i "s#^DB_PASS=.*#DB_PASS=root#" .env
+          sed -i "s#^DB_MIGRATE_USER=.*#DB_MIGRATE_USER=root#" .env
+          sed -i "s#^DB_MIGRATE_PASS=.*#DB_MIGRATE_PASS=root#" .env
+
+      - name: Wait for MySQL
+        run: |
+          for i in $(seq 1 30); do
+            mysqladmin ping -h 127.0.0.1 -P 3306 -uroot -proot --silent && break
+            sleep 2
+          done
+
+      - name: Run migrations (+ seed)
+        run: php database/migrate.php --fresh --seed
+
+      - name: Run smoke tests
+        run: php tests/smoke.php

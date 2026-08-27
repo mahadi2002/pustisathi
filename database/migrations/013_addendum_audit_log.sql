@@ -7,12 +7,12 @@
 -- numbers are encrypted: no reason to keep something reversible around that
 -- doesn't need to be.
 CREATE TABLE audit_log (
-    id           BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    user_id      BIGINT UNSIGNED NULL,
+    id           BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id      BIGINT NULL,
     action       VARCHAR(100) NOT NULL,
     details_json JSON NULL,
     ip_hash      CHAR(64) NULL,
-    created_at   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL,
-    INDEX idx_action_time (action, created_at)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+    created_at   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+);
+CREATE INDEX idx_action_time ON audit_log (action, created_at);

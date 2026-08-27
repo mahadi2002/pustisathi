@@ -2,7 +2,7 @@
 
 <section class="card">
   <h1>BMI / BMR ক্যালকুলেটর</h1>
-  <p>এটি শুধু আনুমানিক হিসাব — সংরক্ষিত হয় না। ব্যক্তিগত ডায়েট প্ল্যানের জন্য Subscribe করুন।</p>
+  <p>এটি শুধু আনুমানিক হিসাব — সংরক্ষিত হয় না। ব্যক্তিগত ডায়েট প্ল্যানের জন্য ফ্রি Account খুলুন।</p>
 
   <form id="bmi-form">
     <div class="field">
@@ -42,7 +42,6 @@
     <p>দৈনিক আনুমানিক ক্যালরি প্রয়োজন (BMR × Activity): <strong id="bmr-value"></strong> kcal</p>
   </div>
 
-  <p>এই হিসাবের উপর ভিত্তি করে সম্পূর্ণ ব্যক্তিগত ডায়েট প্ল্যান পেতে Subscribe করুন।</p>
-  <?= \App\Core\View::partial('partials/price-line') ?>
-  <?= \App\Core\View::partial('partials/subscribe-now-button') ?>
+  <p>এই হিসাবের উপর ভিত্তি করে সম্পূর্ণ ব্যক্তিগত ডায়েট প্ল্যান পেতে ফ্রি Account খুলুন।</p>
+  <?= \App\Core\View::partial('partials/login-cta') ?>
 </section>

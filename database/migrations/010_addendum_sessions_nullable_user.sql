@@ -7,4 +7,4 @@
 -- change that keeps DB-backed sessions working for anonymous visitors, and
 -- it's a separate file rather than an edit to the original schema so the
 -- change is easy to spot and review on its own.
-ALTER TABLE sessions MODIFY user_id BIGINT UNSIGNED NULL;
+ALTER TABLE sessions MODIFY COLUMN user_id BIGINT NULL;

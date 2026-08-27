@@ -14,7 +14,7 @@ final class HealthController extends Controller
     public function index(Request $request): Response
     {
         try {
-            $ok = Db::value('SELECT 1') === 1;
+            $ok = (int) Db::value('SELECT 1') === 1;
         } catch (\Throwable) {
             $ok = false;
         }

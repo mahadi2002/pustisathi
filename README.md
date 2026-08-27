@@ -3,10 +3,10 @@
 Bangla nutrition app: a free BMI/calorie estimate, then a personalized
 daily diet plan matched to body profile, budget, and local food
 availability — plus a patient↔nutritionist matching and messaging loop for
-people who want an actual professional involved. Gated behind a ৳2.78/day
-direct-carrier-billing micro-subscription for Robi & Airtel users,
-mobile+OTP only, no passwords. Third app in this workspace's series (after GardenBondhu,
-IELTS Master BD) — same architecture, re-skinned.
+people who want an actual professional involved. Hobby project — no
+billing, no subscription plans; every feature is free behind a plain
+email+password account. Third app in this workspace's series (after
+GardenBondhu, IELTS Master BD) — same architecture, re-skinned.
 
 ## Stack
 
@@ -45,24 +45,28 @@ C:\xampp\php\php.exe -S 127.0.0.1:8000 -t public public/router-dev.php
 purpose (shared infrastructure) — `C:\xampp\mysql\bin\mysqladmin.exe -u
 root shutdown` if you want it down too.
 
-### Logging in without setting up real billing
+### Logging in
 
-The billing gateway defaults to a mock implementation (`SUBSCRIPTION_GATEWAY=mock`
-in `.env`), and OTP login accepts the fixed dev code `123456` for any
-number when `APP_ENV=local` — no real carrier-billing credentials or SMS
-delivery needed to test the app end to end. Demo accounts from the seed:
+Email + password for every role — `POST /register` for a new patient
+account, `POST /nutri/register` for a new (pending-approval) nutritionist
+account, `POST /login` for everyone, including admin. Demo accounts from
+the seed:
 
-- Admin: mobile `01899999999`, OTP `123456` — no subscription required.
-- Nutritionist: mobile `01812345678`, OTP `123456`.
+- Admin: `admin@pustisathi.test` / `AdminDemo#2026`
+- Nutritionist (pre-approved): `nutritionist@pustisathi.test` / `NutriDemo#2026`
 
 ## Docs
 
-Not written yet for this app — `docs/`, `tests/smoke.php`, and `cron/`
-exist as empty scaffolding but haven't been filled in, unlike the other
-three apps in the series. Until then, `app/Rules/`, `app/Services/`, and
-`database/migrations/` are the most direct way to see how it actually
-works.
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — request lifecycle, layer breakdown
+- [docs/DATABASE.md](docs/DATABASE.md) — full schema reference
+- [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) — cPanel/shared-hosting deploy steps
+- [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) — setup, conventions, testing
+- [docs/FEATURES.md](docs/FEATURES.md) — what's built, what's a known gap
+- [docs/SECURITY.md](docs/SECURITY.md) — auth, sessions, CSRF, PII handling
+
+`php tests/smoke.php` is the load-bearing-logic gate — see
+docs/DEVELOPMENT.md for what it covers.
 
 ## License
 
-Private — all rights reserved.
+MIT — see [LICENSE](LICENSE).

@@ -111,9 +111,6 @@ final class Validator
             'in' => in_array($str, explode(',', (string) $arg), true)
                 ?: $this->fail($field, $label . ' সঠিক নয়।'),
 
-            'slug' => preg_match('/^[a-z0-9\-]{1,140}$/', $str) === 1
-                ?: $this->fail($field, $label . ' সঠিক নয়।'),
-
             'array' => is_array($value)
                 ?: $this->fail($field, $label . ' সঠিক নয়।'),
 

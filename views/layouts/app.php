@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title><?= e($title ?? $appName) ?> — <?= e($appName) ?></title>
-<link rel="stylesheet" href="<?= e(asset('css/app.css')) ?>">
+<link rel="stylesheet" href="<?= e(asset('dist/app.css')) ?>">
 </head>
 <body>
 <header class="site-header">
@@ -36,6 +36,6 @@
   <a href="/app/plan" class="<?= ($currentPath ?? '') === '/app/plan' ? 'active' : '' ?>">🍽️<br>Plan</a>
 </nav>
 
-<script src="<?= e(asset('js/app.js')) ?>" defer></script>
+<script src="<?= e(asset('dist/app.js')) ?>" defer></script>
 </body>
 </html>

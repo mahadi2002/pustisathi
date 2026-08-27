@@ -135,29 +135,6 @@ if (!function_exists('csrf_field')) {
     }
 }
 
-if (!function_exists('str_excerpt')) {
-    /** Multibyte-safe excerpt that does not cut a Bangla word in half. */
-    function str_excerpt(?string $text, int $chars = 180): string
-    {
-        $text = trim(preg_replace('/\s+/u', ' ', strip_tags((string) $text)) ?? '');
-        if (mb_strlen($text, 'UTF-8') <= $chars) {
-            return $text;
-        }
-        $cut = mb_substr($text, 0, $chars, 'UTF-8');
-        $sp  = mb_strrpos($cut, ' ', 0, 'UTF-8');
-        return rtrim($sp !== false ? mb_substr($cut, 0, $sp, 'UTF-8') : $cut, ' ,।-') . '…';
-    }
-}
-
-if (!function_exists('slugify')) {
-    function slugify(string $text): string
-    {
-        $text = mb_strtolower(trim($text), 'UTF-8');
-        $text = preg_replace('/[^\p{L}\p{N}]+/u', '-', $text) ?? '';
-        return trim(substr($text, 0, 140), '-');
-    }
-}
-
 if (!function_exists('pct_step')) {
     /**
      * Round a 0-100 value to the nearest 5 for the .w-pct-N utility classes

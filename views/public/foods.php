@@ -2,7 +2,7 @@
 
 <section class="card">
   <h1>খাবারের পুষ্টিমান খুঁজুন</h1>
-  <p>নাম লিখে যেকোনো খাবারের প্রতি ১০০ গ্রামে ক্যালরি ও Macro দেখুন। Guest হিসেবে দিনে <?= e((string) config('app.foods.search_daily_cap_guest', 10)) ?> বার পর্যন্ত খুঁজতে পারবেন — Subscriber দের জন্য কোনো সীমা নেই।</p>
+  <p>নাম লিখে যেকোনো খাবারের প্রতি ১০০ গ্রামে ক্যালরি ও Macro দেখুন। Guest হিসেবে দিনে <?= e((string) config('app.foods.search_daily_cap_guest', 10)) ?> বার পর্যন্ত খুঁজতে পারবেন — Login করা থাকলে কোনো সীমা নেই।</p>
 
   <form method="get" action="/foods" id="food-search-form" class="field food-search-form">
     <label for="q" class="sr-only">খাবারের নাম</label>
@@ -16,7 +16,7 @@
 <?php if ($capped): ?>
   <div class="alert alert-info">
     আজকের জন্য Free খোঁজার সীমা শেষ হয়ে গেছে।
-    <a href="/subscribe">Subscribe Now</a> — Unlimited Search সহ পুরো Diet Plan পাবেন।
+    <a href="/login">Login করুন</a> — Unlimited Search সহ পুরো Diet Plan পাবেন।
   </div>
 <?php elseif ($query !== '' && $results === []): ?>
   <div class="alert alert-info">"<?= e($query) ?>" এর সাথে মিলে এমন কোনো খাবার পাওয়া যায়নি।</div>
@@ -51,7 +51,6 @@
 
 <section class="card">
   <h2>সম্পূর্ণ Diet Plan চান?</h2>
-  <p>শুধু পুষ্টিমান নয় — আপনার শরীর, বাজেট আর এলাকা বুঝে সাজানো সম্পূর্ণ দৈনিক খাবারের তালিকা পেতে Subscribe করুন।</p>
-  <?= \App\Core\View::partial('partials/price-line') ?>
-  <?= \App\Core\View::partial('partials/subscribe-now-button') ?>
+  <p>শুধু পুষ্টিমান নয় — আপনার শরীর, বাজেট আর এলাকা বুঝে সাজানো সম্পূর্ণ দৈনিক খাবারের তালিকা পেতে ফ্রি Account খুলুন।</p>
+  <?= \App\Core\View::partial('partials/login-cta') ?>
 </section>

@@ -162,7 +162,7 @@ final class Session implements SessionHandlerInterface
         Db::exec(
             'INSERT INTO sessions (id, user_id, payload, last_active)
              VALUES (?, ?, ?, NOW())
-             ON DUPLICATE KEY UPDATE user_id = VALUES(user_id), payload = VALUES(payload), last_active = NOW()',
+             ON DUPLICATE KEY UPDATE user_id = VALUES(user_id), payload = VALUES(payload), last_active = VALUES(last_active)',
             [$id, $userId, $data]
         );
 
@@ -177,6 +177,6 @@ final class Session implements SessionHandlerInterface
 
     public function gc(int $maxLifetime): int|false
     {
-        return Db::exec('DELETE FROM sessions WHERE last_active < DATE_SUB(NOW(), INTERVAL ? SECOND)', [$maxLifetime]);
+        return Db::exec('DELETE FROM sessions WHERE last_active < NOW() - INTERVAL ? SECOND', [$maxLifetime]);
     }
 }

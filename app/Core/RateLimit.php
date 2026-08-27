@@ -42,24 +42,6 @@ final class RateLimit
         return null;
     }
 
-    /** Check without consuming a hit. */
-    public static function tooMany(string $bucket, string $key, int $limit, int $windowSeconds): ?int
-    {
-        $windowStart = self::windowStart($windowSeconds);
-        $bucketKey   = $bucket . ':' . substr($key, 0, 140);
-
-        $count = (int) Db::value(
-            'SELECT count FROM rate_limits WHERE bucket_key = ? AND window_start = ?',
-            [$bucketKey, $windowStart]
-        );
-
-        if ($count >= $limit) {
-            return max(1, $windowSeconds - (time() - strtotime($windowStart)));
-        }
-
-        return null;
-    }
-
     private static function windowStart(int $windowSeconds): string
     {
         $aligned = intdiv(time(), $windowSeconds) * $windowSeconds;

@@ -3,9 +3,8 @@
 <section class="hero">
   <h1>আপনার শরীর, বাজেট আর এলাকা বুঝে প্রতিদিনের ডায়েট প্ল্যান</h1>
   <p>বয়স, ওজন, বাজেট আর আপনার এলাকায় যা পাওয়া যায় — সব মিলিয়ে পুষ্টিসাথী বানিয়ে দেয় বাস্তবসম্মত খাবারের তালিকা। ডায়াবেটিস, কিডনি সমস্যা, হৃদরোগ বা গর্ভাবস্থার মতো অবস্থার জন্য আলাদা নির্দেশনাও আছে।</p>
-  <p class="hero-kicker">🚀 এখনই Start করুন</p>
-  <?= \App\Core\View::partial('partials/price-line') ?>
-  <?= \App\Core\View::partial('partials/subscribe-now-button') ?>
+  <p class="hero-kicker">🚀 এখনই Start করুন — সম্পূর্ণ ফ্রি</p>
+  <?= \App\Core\View::partial('partials/login-cta') ?>
 </section>
 
 <h2 class="section-title">কীভাবে কাজ করে</h2>
@@ -82,68 +81,30 @@
   </div>
 </div>
 
-<h2 class="section-title">Free বনাম Subscriber</h2>
-<p class="section-sub">দুটোই ব্যবহার করে দেখুন — কোনটা আপনার জন্য ঠিক, নিজেই বুঝবেন।</p>
-
-<div class="plan-cards">
-  <div class="plan-card reveal">
-    <h3>Free — সবার জন্য</h3>
-    <p class="plan-card-price">কোনো Sign up বা মোবাইল নম্বর লাগবে না</p>
-    <ul>
-      <li>BMI, BMR ও দৈনিক আনুমানিক ক্যালরি চাহিদা হিসাব — Unlimited ব্যবহার</li>
-      <li>খাবারের পুষ্টিমান (ক্যালরি, Protein, Carb, Fat) খোঁজা — দিনে <?= e((string) config('app.foods.search_daily_cap_guest', 10)) ?> বার পর্যন্ত</li>
-      <li>সহজ, স্পষ্ট বাংলায় ফলাফল — জটিল মেডিকেল Term ছাড়াই</li>
-      <li>ওয়েবসাইট ব্রাউজ করেই ব্যবহার করা যায়, কোনো Install লাগে না</li>
-    </ul>
-    <a class="btn btn-outline btn-block" href="/calculator">Free এ শুরু করুন</a>
-  </div>
-  <div class="plan-card is-premium reveal">
-    <span class="plan-card-badge">সম্পূর্ণ Access</span>
-    <h3>Subscriber — সম্পূর্ণ সমাধান</h3>
-    <p class="plan-card-price">Daily ৳<?= e($dailyAmount) ?> (Incl. VAT, SD &amp; SC)</p>
-    <ul>
-      <li>বয়স, ওজন, উচ্চতা ও Activity Level অনুযায়ী সম্পূর্ণ ব্যক্তিগত Diet Plan</li>
-      <li>ডায়াবেটিস, কিডনি সমস্যা, হৃদরোগ ও গর্ভাবস্থার জন্য আলাদা নির্দেশনা</li>
-      <li>আপনার বাজেট (Low/Mid/High) মেনে খাবার নির্বাচন — বাস্তবতার বাইরে যাবে না</li>
-      <li>আপনার জেলা/উপজেলায় সহজে পাওয়া যায় এমন খাবারকে অগ্রাধিকার</li>
-      <li>খাবার খোঁজায় কোনো দৈনিক সীমা নেই — Unlimited</li>
-      <li>প্রোফাইল বদলালে বা চাইলেই নতুন করে Plan তৈরি (Regenerate) করুন</li>
-      <li>স্বাস্থ্য তথ্য AES-256 দিয়ে Encrypted — Plaintext-এ কোথাও সংরক্ষণ হয় না</li>
-      <li>যেকোনো সময় Unsubscribe — SMS-এ STOP লিখে 16216 নম্বরে পাঠালেই হয়</li>
-    </ul>
-    <?= \App\Core\View::partial('partials/subscribe-now-button', ['class' => 'btn btn-accent btn-block']) ?>
-  </div>
-</div>
-
-<p class="section-sub">ফিচার অনুযায়ী পুরো তালিকা নিচে:</p>
-<div class="compare-table-wrap">
-  <table class="compare-table">
-    <thead>
-      <tr><th>Feature</th><th>Free</th><th>Subscriber</th></tr>
-    </thead>
-    <tbody>
-      <tr><td>BMI / BMR ক্যালকুলেটর</td><td class="yes">✓</td><td class="yes">✓</td></tr>
-      <tr><td>খাবারের পুষ্টিমান খোঁজা</td><td class="locked">দিনে <?= e((string) config('app.foods.search_daily_cap_guest', 10)) ?> বার পর্যন্ত</td><td class="yes">Unlimited</td></tr>
-      <tr><td>ব্যক্তিগত Diet Plan</td><td class="locked">—</td><td class="yes">✓</td></tr>
-      <tr><td>রোগ-ভিত্তিক ও বাজেট-ভিত্তিক নির্দেশনা</td><td class="locked">—</td><td class="yes">✓</td></tr>
-      <tr><td>দৈনিক Food Log</td><td class="locked">—</td><td class="soon">শীঘ্রই আসছে</td></tr>
-      <tr><td>Plan History + PDF Export</td><td class="locked">—</td><td class="soon">শীঘ্রই আসছে</td></tr>
-      <tr><td>Nutritionist Review</td><td class="locked">—</td><td class="soon">শীঘ্রই আসছে</td></tr>
-    </tbody>
-  </table>
-</div>
-<?= \App\Core\View::partial('partials/price-line') ?>
+<section class="card">
+  <h2>যা পাবেন — সব ফ্রি, শুধু একটি Account লাগবে</h2>
+  <ul>
+    <li>বয়স, ওজন, উচ্চতা ও Activity Level অনুযায়ী সম্পূর্ণ ব্যক্তিগত Diet Plan</li>
+    <li>ডায়াবেটিস, কিডনি সমস্যা, হৃদরোগ ও গর্ভাবস্থার জন্য আলাদা নির্দেশনা</li>
+    <li>আপনার বাজেট (Low/Mid/High) মেনে খাবার নির্বাচন — বাস্তবতার বাইরে যাবে না</li>
+    <li>আপনার জেলা/উপজেলায় সহজে পাওয়া যায় এমন খাবারকে অগ্রাধিকার</li>
+    <li>খাবার খোঁজায় কোনো দৈনিক সীমা নেই — Unlimited</li>
+    <li>প্রোফাইল বদলালে বা চাইলেই নতুন করে Plan তৈরি (Regenerate) করুন</li>
+    <li>স্বাস্থ্য তথ্য AES-256 দিয়ে Encrypted — Plaintext-এ কোথাও সংরক্ষণ হয় না</li>
+  </ul>
+  <?= \App\Core\View::partial('partials/login-cta') ?>
+</section>
 
 <div class="trust-row">
   <div class="trust-item reveal">
     <span class="feature-icon-badge">🔒</span>
     <h3>এনক্রিপ্টেড স্বাস্থ্য তথ্য</h3>
-    <p>মোবাইল নম্বর ও স্বাস্থ্য সংক্রান্ত তথ্য AES-256 দিয়ে Encrypt করে রাখা হয় — Plaintext-এ কোথাও না।</p>
+    <p>স্বাস্থ্য সংক্রান্ত তথ্য AES-256 দিয়ে Encrypt করে রাখা হয় — Plaintext-এ কোথাও না।</p>
   </div>
   <div class="trust-item reveal">
-    <span class="feature-icon-badge">🚪</span>
-    <h3>যেকোনো সময় Unsubscribe</h3>
-    <p>Subscribe করার সাথে সাথেই Unsubscribe করার সুযোগ থাকে — কোনো লুকানো শর্ত নেই।</p>
+    <span class="feature-icon-badge">🆓</span>
+    <h3>সম্পূর্ণ ফ্রি</h3>
+    <p>কোনো Billing বা Subscription নেই — একটি Account খুলে সরাসরি ব্যবহার শুরু করুন।</p>
   </div>
   <div class="trust-item reveal">
     <span class="feature-icon-badge">⚠️</span>
@@ -154,8 +115,6 @@
 
 <section class="card">
   <h2>একজন Nutritionist?</h2>
-  <p>Register করুন, Admin Approve করলে এবং Subscription চালু থাকলে (ঠিক রোগীদের মতোই — Daily ৳<?= e($dailyAmount) ?>, Incl. VAT, SD &amp; SC) ভবিষ্যতে Patient দের Profile দেখে নিজে Plan বানাতে ও সংশোধন করতে পারবেন।</p>
+  <p>Register করুন, Admin Approve করলে Patient দের Profile দেখে নিজে Plan বানাতে ও সংশোধন করতে পারবেন।</p>
   <a class="btn btn-outline" href="/nutri/register">Nutritionist হিসেবে Register করুন</a>
 </section>
-
-<?= \App\Core\View::partial('partials/subscribe-box', ['next' => '/app/dashboard']) ?>

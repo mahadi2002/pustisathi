@@ -23,11 +23,10 @@ final class Db
 
         $c   = config('database');
         $dsn = sprintf(
-            'mysql:host=%s;port=%d;dbname=%s;charset=%s',
+            'mysql:host=%s;port=%d;dbname=%s;charset=utf8mb4',
             $c['host'],
             $c['port'],
-            $c['name'],
-            $c['charset']
+            $c['name']
         );
 
         self::$pdo = new PDO($dsn, $c['user'], $c['pass'], [

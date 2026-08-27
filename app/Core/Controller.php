@@ -68,14 +68,9 @@ abstract class Controller
         return (new \App\Repositories\UserRepo())->find($id);
     }
 
-    /**
-     * True when the viewer may see gated content right now.
-     * Always re-read from the DB — never from a session flag, so a lapsed
-     * subscription loses access on the very next request, not next login.
-     */
-    protected function isSubscribed(): bool
+    /** True when the viewer is signed in — used to unlock the free surfaces' logged-in-only perks (e.g. unlimited food search). */
+    protected function isAuthenticated(): bool
     {
-        $userId = Session::userId();
-        return $userId !== null && \App\Services\SubscriptionService::hasAccess($userId);
+        return Session::userId() !== null;
     }
 }

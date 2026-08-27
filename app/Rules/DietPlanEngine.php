@@ -90,7 +90,7 @@ final class DietPlanEngine
                     f.name_bn, f.name_en, f.per_100g_kcal, f.per_100g_protein_g, f.per_100g_carb_g, f.per_100g_fat_g
              FROM plan_meals pm JOIN food_items f ON f.id = pm.food_id
              WHERE pm.plan_id = ?
-             ORDER BY FIELD(pm.meal_slot, 'breakfast', 'lunch', 'dinner', 'snack'), pm.sort_order",
+             ORDER BY FIELD(pm.meal_slot, 'breakfast','lunch','dinner','snack'), pm.sort_order",
             [$plan['id']]
         );
 

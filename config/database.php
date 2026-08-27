@@ -7,7 +7,6 @@ return [
     'name'    => env('DB_NAME', 'pustisathi'),
     'user'    => env('DB_USER', 'pustisathi_app'),
     'pass'    => (string) env('DB_PASS', ''),
-    'charset' => env('DB_CHARSET', 'utf8mb4'),
 
     // migrate.php only, never the web app — the runtime DB user has no DDL
     // rights, so a SQL-injection bug in the app itself can never DROP or

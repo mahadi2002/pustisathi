@@ -90,26 +90,6 @@ final class Request
         )));
     }
 
-    public function file(string $key): ?array
-    {
-        $f = $this->files[$key] ?? null;
-        if (!is_array($f) || ($f['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) {
-            return null;
-        }
-        return $f;
-    }
-
-    public function rawBody(): string
-    {
-        return (string) file_get_contents('php://input');
-    }
-
-    public function json(): array
-    {
-        $decoded = json_decode($this->rawBody(), true);
-        return is_array($decoded) ? $decoded : [];
-    }
-
     public function isPost(): bool
     {
         return $this->method === 'POST';
@@ -135,11 +115,6 @@ final class Request
             }
         }
         return $remote;
-    }
-
-    public function userAgent(): string
-    {
-        return substr((string) $this->header('user-agent', ''), 0, 512);
     }
 
     public function ipHash(): string

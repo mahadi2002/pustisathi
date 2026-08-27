@@ -7,5 +7,7 @@
 -- retry cycle with access still on before landing on 'expired'; 'pending'
 -- covers a gateway that confirms the charge asynchronously after OTP,
 -- rather than in the same request.
-ALTER TABLE subscriptions
-    MODIFY status ENUM('pending','active','grace','unsubscribed','failed','expired') NOT NULL DEFAULT 'pending';
+ALTER TABLE subscriptions ALTER COLUMN status SET DEFAULT 'pending';
+ALTER TABLE subscriptions DROP CONSTRAINT chk_subscriptions_status;
+ALTER TABLE subscriptions ADD CONSTRAINT chk_subscriptions_status
+  CHECK (status IN ('pending','active','grace','unsubscribed','failed','expired'));

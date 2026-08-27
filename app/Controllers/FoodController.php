@@ -11,11 +11,11 @@ use App\Core\Response;
 
 /**
  * Free-tier food lookup: name + macros only, capped per day for guests.
- * An active subscriber searches without limit — the cap exists to keep the
- * free surface useful for SEO/trust without giving away the whole database.
- * Answers either a full page (normal navigation) or JSON (the live-search
- * JS on the page fetches this same URL with an Accept: application/json
- * header instead of reloading).
+ * A logged-in user (any role) searches without limit — the cap exists to
+ * keep the free surface useful for SEO/trust without giving away the whole
+ * database. Answers either a full page (normal navigation) or JSON (the
+ * live-search JS on the page fetches this same URL with an
+ * Accept: application/json header instead of reloading).
  */
 final class FoodController extends Controller
 {
@@ -24,7 +24,7 @@ final class FoodController extends Controller
         $query    = trim($request->str('q'));
         $results  = [];
         $capped   = false;
-        $unlocked = $this->isSubscribed();
+        $unlocked = $this->isAuthenticated();
 
         if ($query !== '') {
             if (!$unlocked) {

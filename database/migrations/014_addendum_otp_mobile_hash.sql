@@ -4,7 +4,6 @@
 -- an oversight, not a deliberate exception. This table never needs the
 -- plaintext back (OtpService only ever compares, never displays it), so a
 -- one-way blind-index hash is enough here, no ciphertext/decrypt path needed.
-ALTER TABLE otp_requests
-    DROP INDEX idx_mobile,
-    CHANGE COLUMN mobile mobile_hash CHAR(64) NOT NULL,
-    ADD INDEX idx_mobile_hash (mobile_hash);
+DROP INDEX idx_mobile ON otp_requests;
+ALTER TABLE otp_requests CHANGE COLUMN mobile mobile_hash CHAR(64) NOT NULL;
+CREATE INDEX idx_mobile_hash ON otp_requests (mobile_hash);

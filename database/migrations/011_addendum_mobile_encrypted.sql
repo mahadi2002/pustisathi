@@ -6,8 +6,15 @@
 -- of the plaintext value. Ciphertext is never the same twice (random IV per
 -- encryption), so the old UNIQUE constraint on the column itself has to go —
 -- uniqueness now lives on the hash column instead.
-ALTER TABLE users
-    DROP INDEX mobile,
-    MODIFY mobile VARBINARY(255) NULL,
-    ADD COLUMN mobile_hash CHAR(64) NULL AFTER mobile,
-    ADD UNIQUE KEY uq_users_mobile_hash (mobile_hash);
+--
+-- The column is blanked (not byte-reinterpreted) on the type change: old
+-- plaintext digits are not valid ciphertext, and reinterpreting them as such
+-- would just store garbage rather than a real encrypted value.
+--
+-- TEXT: App\Core\Crypto::encrypt() always returns a base64 string (never
+-- raw bytes), so the column only ever holds printable ASCII.
+ALTER TABLE users DROP INDEX uq_users_mobile;
+UPDATE users SET mobile = NULL;
+ALTER TABLE users MODIFY COLUMN mobile TEXT NULL;
+ALTER TABLE users ADD COLUMN mobile_hash CHAR(64) NULL;
+ALTER TABLE users ADD CONSTRAINT uq_users_mobile_hash UNIQUE (mobile_hash);

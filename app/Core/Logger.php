@@ -16,11 +16,6 @@ final class Logger
 {
     private const LEVELS = ['debug' => 10, 'info' => 20, 'warning' => 30, 'error' => 40];
 
-    public static function debug(string $message, array $context = []): void
-    {
-        self::write('debug', $message, $context);
-    }
-
     public static function info(string $message, array $context = []): void
     {
         self::write('info', $message, $context);
@@ -42,12 +37,6 @@ final class Logger
             'file'  => $e->getFile() . ':' . $e->getLine(),
             'trace' => explode("\n", $e->getTraceAsString()),
         ]);
-    }
-
-    /** MockGateway writes generated OTPs here in dev only — never in production. */
-    public static function channel(string $channel, string $message): void
-    {
-        self::append($channel, date('c') . ' ' . $message . PHP_EOL);
     }
 
     private static function write(string $level, string $message, array $context): void

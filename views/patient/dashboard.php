@@ -10,16 +10,6 @@ $carbKcal    = $carbG * 4;
 $fatKcal     = $fatG * 9;
 $totalKcal   = max(1.0, $proteinKcal + $carbKcal + $fatKcal);
 
-$statusLabels = [
-    'active'       => ['label' => 'সক্রিয়',       'class' => 'active'],
-    'grace'        => ['label' => 'গ্রেস পিরিয়ড', 'class' => 'grace'],
-    'pending'      => ['label' => 'পেন্ডিং',       'class' => 'grace'],
-    'unsubscribed' => ['label' => 'Unsubscribed', 'class' => 'other'],
-    'failed'       => ['label' => 'Charge ব্যর্থ', 'class' => 'other'],
-    'expired'      => ['label' => 'মেয়াদোত্তীর্ণ', 'class' => 'other'],
-];
-$subStatus = $subscription !== null ? ($statusLabels[$subscription['status']] ?? ['label' => $subscription['status'], 'class' => 'other']) : null;
-
 $mealLabels = ['breakfast' => 'সকালের নাস্তা', 'lunch' => 'দুপুরের খাবার', 'dinner' => 'রাতের খাবার', 'snack' => 'নাস্তা'];
 $regionLabel = null;
 if (!empty($profile['region_id'])) {
@@ -122,19 +112,6 @@ if (!empty($profile['region_id'])) {
   </div>
 <?php endif; ?>
 
-<?php if ($subscription !== null && $subStatus !== null): ?>
-  <section class="card">
-    <h2>Subscription</h2>
-    <p>
-      <span class="status-pill <?= e($subStatus['class']) ?>"><?= e($subStatus['label']) ?></span>
-      <?php if ($subscription['next_charge_at']): ?>
-        &nbsp; পরবর্তী Charge: <?= e(bn_date($subscription['next_charge_at'])) ?>
-      <?php endif; ?>
-    </p>
-    <p class="text-muted section-note">Daily ৳<?= e($dailyAmount) ?> (Incl. VAT, SD &amp; SC), <?= e(ucfirst((string) $subscription['operator'])) ?> এর মাধ্যমে।</p>
-  </section>
-<?php endif; ?>
-
 <section class="card">
   <h2>আপনার প্রোফাইল</h2>
   <dl class="profile-summary-grid">
@@ -145,4 +122,22 @@ if (!empty($profile['region_id'])) {
     <?php if ($regionLabel): ?><div><dt>এলাকা</dt><dd><?= e($regionLabel) ?></dd></div><?php endif; ?>
   </dl>
   <a class="btn btn-outline" href="/app/onboarding">প্রোফাইল Update করুন</a>
+</section>
+
+<section class="card">
+  <h2>নিউট্রিশনিস্টের সাথে যুক্ত হন</h2>
+  <p class="text-muted section-note">এই কোডটি আপনার Nutritionist কে দিন — তিনি এটি দিয়ে আপনার Profile দেখতে ও নোট রাখতে পারবেন।</p>
+  <?php if (!empty($profile['share_code'])): ?>
+    <div class="share-code-display">
+      <code class="share-code-value"><?= e($profile['share_code']) ?></code>
+    </div>
+  <?php else: ?>
+    <p class="text-muted">এখনো কোনো কোড তৈরি হয়নি।</p>
+  <?php endif; ?>
+  <form method="post" action="/app/share-code">
+    <?= csrf_field() ?>
+    <button type="submit" class="btn btn-outline">
+      <?= !empty($profile['share_code']) ? 'নতুন কোড তৈরি করুন' : 'কোড তৈরি করুন' ?>
+    </button>
+  </form>
 </section>

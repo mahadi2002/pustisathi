@@ -34,9 +34,6 @@ try {
     $response = $router->dispatch($request);
 } catch (HttpException $e) {
     $response = renderError($e->status, $e->getMessage(), $e->context);
-} catch (PDOException $e) {
-    App\Core\Logger::exception($e);
-    $response = Response::html(View::render('errors/500'), 500);
 } catch (Throwable $e) {
     App\Core\Logger::exception($e);
 

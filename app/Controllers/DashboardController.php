@@ -7,8 +7,8 @@ use App\Core\Controller;
 use App\Core\Db;
 use App\Core\Request;
 use App\Core\Response;
+use App\Core\Session;
 use App\Rules\DietPlanEngine;
-use App\Services\SubscriptionService;
 
 final class DashboardController extends Controller
 {
@@ -57,7 +57,6 @@ final class DashboardController extends Controller
             ];
         }
 
-        $subscription = SubscriptionService::current($userId);
         $planAgeDays  = $plan !== null ? (int) floor((time() - strtotime((string) $plan['created_at'])) / 86400) : null;
 
         return $this->view('patient/dashboard', [
@@ -69,8 +68,36 @@ final class DashboardController extends Controller
             'activityLabel'    => self::ACTIVITY_LABELS[$profile['activity_level']] ?? $profile['activity_level'],
             'activityMultiplier' => $multiplier,
             'conditionTips'    => $conditionTips,
-            'subscription'     => $subscription,
             'planAgeDays'      => $planAgeDays,
         ]);
+    }
+
+    /**
+     * Generates (or replaces) the short code a nutritionist enters to link
+     * this patient — see NutriController::link(). Uppercase hex from
+     * random_bytes so it's short enough to read aloud but not guessable.
+     */
+    public function shareCode(Request $request): Response
+    {
+        $userId = $this->currentUserId();
+
+        $code = null;
+        for ($i = 0; $i < 20; $i++) {
+            $candidate = strtoupper(bin2hex(random_bytes(4)));
+            if (Db::value('SELECT id FROM body_profiles WHERE share_code = ?', [$candidate]) === null) {
+                $code = $candidate;
+                break;
+            }
+        }
+
+        if ($code === null) {
+            Session::notify('error', 'কোড তৈরি করা যায়নি, আবার চেষ্টা করুন।');
+            return $this->redirect('/app/dashboard');
+        }
+
+        Db::exec('UPDATE body_profiles SET share_code = ? WHERE user_id = ?', [$code, $userId]);
+
+        Session::notify('success', 'নতুন কোড তৈরি হয়েছে — এটি আপনার Nutritionist কে দিন।');
+        return $this->redirect('/app/dashboard');
     }
 }

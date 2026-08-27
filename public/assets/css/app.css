@@ -48,6 +48,12 @@
   --font-bn: 'Hind Siliguri', 'Noto Sans Bengali', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --font-en: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --transition: 160ms ease;
+
+  /* Lets a `transition` to/from the `auto` keyword (e.g. height: auto on
+     the meal accordion, below) actually animate instead of snapping —
+     ignored outright by browsers that don't know it, which is fine: those
+     browsers just keep the old instant-toggle behavior. */
+  interpolate-size: allow-keywords;
 }
 
 * { box-sizing: border-box; }
@@ -377,6 +383,28 @@ input[type=number]:focus, select:focus, textarea:focus {
 .alert-error   { background: var(--color-error-bg); color: var(--color-error-text); }
 .alert-info    { background: var(--color-info-bg); color: var(--color-info-text); }
 
+/* Plain <ul> bullets read as an afterthought next to the rest of this
+   design system's cards/badges — used for short "not built yet" lists
+   (e.g. admin/home's roadmap) so a bare list doesn't look like a bug. */
+.roadmap-list { list-style: none; margin: 0; padding: 0; }
+
+.roadmap-list li {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.roadmap-list li:last-child { border-bottom: none; }
+
+.roadmap-list li::before {
+  content: '→';
+  color: var(--color-tertiary);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
 .disclaimer {
   background: var(--color-warn-bg);
   border: 1px solid var(--color-warn-border);
@@ -456,10 +484,27 @@ input[type=number]:focus, select:focus, textarea:focus {
   overflow: hidden;
 }
 
-.macro-bar-fill { height: 100%; border-radius: 999px; transition: width 480ms ease; }
+.macro-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 480ms ease;
+  /* The .w-pct-N width is already the final value at first paint (server-
+     rendered, no JS toggle), so a plain `transition: width` never actually
+     fires on load — nothing changes for it to transition from. Animating
+     scaleX from 0 instead (with transform-origin pinned to the left edge)
+     gets the same "fills in on load" effect regardless of which .w-pct-N
+     class landed on this particular bar. */
+  transform-origin: left;
+  animation: macro-fill-in 700ms ease-out;
+}
 .macro-bar-fill.protein { background: var(--color-primary); }
 .macro-bar-fill.carb { background: var(--color-accent); }
 .macro-bar-fill.fat { background: var(--color-tertiary); }
+
+@keyframes macro-fill-in {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
 
 /* -- Dashboard: condition tips, subscription status, profile summary ---- */
 
@@ -523,9 +568,27 @@ input[type=number]:focus, select:focus, textarea:focus {
 }
 
 .meal-details summary::-webkit-details-marker { display: none; }
-.meal-details summary::after { content: '+'; font-size: 1.3rem; color: var(--color-muted); }
+.meal-details summary::after { content: '+'; font-size: 1.3rem; color: var(--color-muted); transition: transform var(--transition); }
 .meal-details[open] summary::after { content: '\2212'; }
 .meal-details .meal-items { padding: 0 16px 14px; }
+
+/* Open/close transition on the accordion body itself, via the native
+   ::details-content pseudo-element — no JS, no wrapper <div> needed.
+   `interpolate-size: allow-keywords` (set on :root, above) is what makes a
+   transition to/from the `auto` keyword itself animate instead of jumping;
+   browsers without support for either feature simply never match this
+   selector, so the accordion still opens/closes instantly and correctly. */
+.meal-details::details-content {
+  overflow: hidden;
+  height: 0;
+  opacity: 0;
+  transition: height 280ms ease, opacity 280ms ease, content-visibility 280ms allow-discrete;
+}
+
+.meal-details[open]::details-content {
+  height: auto;
+  opacity: 1;
+}
 
 /* -- Landing page ------------------------------------------------------- */
 
@@ -855,6 +918,98 @@ input[type=number]:focus, select:focus, textarea:focus {
   from { opacity: 0; transform: translateY(-8px); }
   to { opacity: 1; transform: none; }
 }
+
+/* -- Onboarding: grouped fieldsets (body basics / location & budget /
+   conditions) instead of one flat wall of fields -------------------------- */
+
+.onboarding-fieldset {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 18px 18px 4px;
+  margin: 0 0 22px;
+}
+
+.onboarding-fieldset legend {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 800;
+  font-size: 1.02rem;
+  padding: 0 6px;
+  color: var(--color-primary-dark);
+}
+
+.onboarding-step-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  color: var(--on-primary);
+  font-size: .85rem;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+/* -- Nutritionist: patient roster, share code, clinical notes ------------ */
+
+.share-code-form { display: flex; gap: 10px; margin: 0; }
+.share-code-input {
+  flex: 1;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  font-weight: 700;
+  text-align: center;
+}
+
+.share-code-display {
+  display: inline-flex;
+  margin-bottom: 14px;
+}
+
+.share-code-value {
+  background: var(--color-primary-light);
+  color: var(--color-primary-on-tint);
+  font-weight: 800;
+  font-size: 1.15rem;
+  letter-spacing: .12em;
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+}
+
+.roster-list { list-style: none; margin: 0; padding: 0; }
+.roster-item { border-bottom: 1px solid var(--color-border); }
+.roster-item:last-child { border-bottom: none; }
+
+.roster-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 4px;
+  text-decoration: none;
+  color: var(--color-text);
+  transition: background var(--transition);
+}
+
+.roster-link:hover { background: var(--color-bg); color: var(--color-text); }
+
+.roster-main { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.roster-email { font-weight: 700; }
+.roster-meta { font-size: .82rem; }
+
+.notes-list { list-style: none; margin: 0; padding: 0; }
+
+.note-item {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.note-item:last-child { border-bottom: none; }
+.note-text { margin: 0 0 6px; white-space: pre-line; }
+.note-date { font-size: .78rem; }
 
 /* -- Live food search -------------------------------------------------- */
 

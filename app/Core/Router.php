@@ -17,7 +17,6 @@ final class Router
         'csrf'  => \App\Middleware\CsrfGuard::class,
         'guest' => \App\Middleware\GuestOnly::class,
         'auth'  => \App\Middleware\RequireAuth::class,
-        'sub'   => \App\Middleware\RequireSubscription::class,
         'nutri' => \App\Middleware\RequireNutritionist::class,
         'admin' => \App\Middleware\RequireAdmin::class,
         'rl'    => \App\Middleware\RateLimiter::class,

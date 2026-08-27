@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title><?= e($title ?? $appName) ?> — <?= e($appName) ?></title>
-<link rel="stylesheet" href="<?= e(asset('css/app.css')) ?>">
+<link rel="stylesheet" href="<?= e(asset('dist/app.css')) ?>">
 </head>
 <body>
 <header class="site-header">
@@ -13,16 +13,13 @@
       <?= \App\Core\View::partial('partials/brand-mark') ?>
       পুষ্টিসাথী
     </a>
-    <a class="price-pill" href="/subscribe" title="Daily ৳<?= e($dailyAmount) ?> (Incl. VAT, SD &amp; SC)">
-      <span class="price-pill-short">৳<?= e($dailyAmount) ?>/day</span>
-      <span class="price-pill-full">Daily ৳<?= e($dailyAmount) ?> (Incl. VAT, SD &amp; SC)</span>
-    </a>
 
     <nav class="nav-links">
       <a href="/calculator">BMI Calculator</a>
       <a href="/foods">Food Search</a>
       <?php if (\App\Core\Session::userId() === null): ?>
-        <a href="/subscribe">Subscribe / Login</a>
+        <a href="/login">Login</a>
+        <a href="/register" class="btn btn-accent nav-cta">Register</a>
       <?php else: ?>
         <form method="post" action="/auth/logout" class="nav-logout-form">
           <?= csrf_field() ?>
@@ -41,7 +38,8 @@
       <a href="/calculator">BMI Calculator</a>
       <a href="/foods">Food Search</a>
       <?php if (\App\Core\Session::userId() === null): ?>
-        <a href="/subscribe">Subscribe / Login</a>
+        <a href="/login">Login</a>
+        <a href="/register">Register</a>
       <?php else: ?>
         <form method="post" action="/auth/logout" class="nav-logout-form">
           <?= csrf_field() ?>
@@ -61,12 +59,10 @@
 
 <footer class="container site-footer">
   <p>Privacy Policy | Terms &amp; Conditions | Contact Us<br>
-  Robi &amp; Airtel Bangladesh<br>
   &copy; <?= date('Y') ?> PustiSathi — সর্বস্বত্ব সংরক্ষিত</p>
-  <p>⚠️ Daily ৳<?= e($dailyAmount) ?> (Incl. VAT, SD &amp; SC) আপনার Robi/Airtel মোবাইল ব্যালেন্স থেকে সরাসরি কাটা হবে।
-  Unsubscribe করতে STOP লিখে 16216 নম্বরে SMS করুন।</p>
+  <p class="text-muted">⚠️ প্রতিটি প্ল্যান সাধারণ নির্দেশনা — এটি চিকিৎসা পরামর্শ নয়। জটিল স্বাস্থ্য সমস্যায় ডাক্তার বা ডায়েটিশিয়ানের পরামর্শ নিন।</p>
 </footer>
 
-<script src="<?= e(asset('js/app.js')) ?>" defer></script>
+<script src="<?= e(asset('dist/app.js')) ?>" defer></script>
 </body>
 </html>

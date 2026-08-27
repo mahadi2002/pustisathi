@@ -3,15 +3,15 @@
 -- part of the migration rather than database/seeds/ because the engine
 -- depends on them existing unconditionally, not only after a --seed run.
 CREATE TABLE condition_rules (
-    id                  SMALLINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    id                  SMALLINT AUTO_INCREMENT PRIMARY KEY,
     condition_code      VARCHAR(50) UNIQUE NOT NULL,   -- 'diabetic','renal','cardiac','pregnancy',...
     label_bn            VARCHAR(150) NOT NULL,
     restricted_tags     JSON NOT NULL,   -- food tags to exclude/limit
     required_tags       JSON NULL,       -- food tags to prioritize
-    max_sodium_mg_day   INT UNSIGNED NULL,
-    max_sugar_g_day     INT UNSIGNED NULL,
+    max_sodium_mg_day   INTEGER NULL CHECK (max_sodium_mg_day >= 0),
+    max_sugar_g_day     INTEGER NULL CHECK (max_sugar_g_day >= 0),
     notes_bn            TEXT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+);
 
 INSERT INTO condition_rules (condition_code, label_bn, restricted_tags, required_tags, max_sodium_mg_day, max_sugar_g_day, notes_bn) VALUES
 ('diabetic', 'ডায়াবেটিস', '["high_gi","high_sugar"]', '["low_gi","high_fiber"]', NULL, 25, 'সাধারণ নির্দেশনা — চিকিৎসকের পরামর্শ আবশ্যক'),
